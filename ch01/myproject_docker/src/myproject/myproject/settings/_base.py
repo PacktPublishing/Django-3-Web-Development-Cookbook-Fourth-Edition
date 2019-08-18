@@ -100,7 +100,8 @@ DATABASES = {
         'PASSWORD': get_secret('DATABASE_PASSWORD'),
         'HOST': 'db',
         'PORT': '5432',
-    }}
+    }
+}
 
 
 # Password validation
