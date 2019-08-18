@@ -1,0 +1,56 @@
+myproject_website
+├── commands/
+├── db_backups/
+├── mockups/
+├── src/
+│   └── django-myproject/
+│       ├── externals/
+│       │   ├── apps/
+│       │   │   └── README.md
+│       │   └── libs/
+│       │       └── README.md
+│       ├── locale/
+│       ├── media/
+│       ├── myproject/
+│       │   ├── apps/
+│       │   │   ├── core/
+│       │   │   │   ├── __init__.py
+│       │   │   │   └── versioning.py
+│       │   │   └── __init__.py
+│       │   ├── settings/
+│       │   │   ├── __init__.py
+│       │   │   ├── _base.py
+│       │   │   ├── dev.py
+│       │   │   ├── production.py
+│       │   │   ├── sample_secrets.json
+│       │   │   ├── secrets.json
+│       │   │   ├── staging.py
+│       │   │   └── test.py
+│       │   ├── site_static/
+│       │   │   └── site/
+│       │   │       ├── css/
+│       │   │       │   └── style.css
+│       │   │       ├── img/
+│       │   │       │   ├── favicon-16x16.png
+│       │   │       │   ├── favicon-32x32.png
+│       │   │       │   └── favicon.ico
+│       │   │       ├── js/
+│       │   │       │   └── main.js
+│       │   │       └── scss/
+│       │   │           └── style.scss
+│       │   ├── templates/
+│       │   │   ├── base.html
+│       │   │   └── index.html
+│       │   ├── __init__.py
+│       │   ├── urls.py
+│       │   └── wsgi.py
+│       ├── requirements/
+│       │   ├── _base.txt
+│       │   ├── dev.txt
+│       │   ├── production.txt
+│       │   ├── staging.txt
+│       │   └── test.txt
+│       ├── static/
+│       ├── LICENSE
+│       └── manage.py*
+└── venv/
