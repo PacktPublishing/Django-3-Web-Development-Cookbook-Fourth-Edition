@@ -76,7 +76,7 @@ Press [Ctrl + D] twice to logout of the Docker container.
 
 If you now go to `http://0.0.0.0/admin/`, you should see the Django administration where you can login with the super user's credentials that you have just created.
 
-## 7. Overview of useful commands
+## 6. Overview of useful commands
 
 ### Rebuild docker image
 
@@ -101,10 +101,17 @@ $ docker-compose logs gunicorn
 $ docker-compose logs db
 ```
 
-## 8. Create analogous scripts for staging, production, and test environments
+### Copy files and directories to and from Docker container
+
+```bash
+$ docker cp ~/avatar.png django_docker_gunicorn_1:/home/myproject/media/
+$ docker cp django_docker_gunicorn_1:/home/myproject/media ~/Desktop/
+```
+
+## 7. Create analogous scripts for staging, production, and test environments
 
 Copy `build_dev.sh` to `build_staging.sh`, `build_production.sh`, and `build_test.sh` and change the environment variables analogously.
 
-## 9. Feedback
+## 8. Feedback
 
 If you have any feedback about the boilerplate code or this README file, please open new issues.
