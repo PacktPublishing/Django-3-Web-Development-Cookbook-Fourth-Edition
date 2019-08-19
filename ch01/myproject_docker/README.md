@@ -78,14 +78,14 @@ If you now go to `http://0.0.0.0/admin/`, you should see the Django administrati
 
 ## 6. Overview of useful commands
 
-### Rebuild docker image
+### Rebuild docker containers
 
 ```bash
 $ docker-compose down
 $ ./build_dev.sh
 ```
 
-### SSH to the Docker images
+### SSH to the Docker containers
 
 ```bash
 $ docker exec -it django_docker_gunicorn_1 bash
