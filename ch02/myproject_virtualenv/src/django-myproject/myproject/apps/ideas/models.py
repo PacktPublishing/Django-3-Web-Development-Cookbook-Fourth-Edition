@@ -61,20 +61,20 @@ class Idea(CreationModificationDateBase, MetaTagsBase, UrlBase):
     content = MultilingualTextField(
         _("Content"),
     )
-    category = models.ForeignKey(
-        "categories.Category",
-        verbose_name=_("Category"),
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="category_ideas",
-    )
-    #categories = models.ManyToManyField(
+    #category = models.ForeignKey(
     #    "categories.Category",
     #    verbose_name=_("Category"),
     #    blank=True,
-    #    related_name="ideas",
+    #    null=True,
+    #    on_delete=models.SET_NULL,
+    #    related_name="category_ideas",
     #)
+    categories = models.ManyToManyField(
+        "categories.Category",
+        verbose_name=_("Categories"),
+        blank=True,
+        related_name="ideas",
+    )
 
     class Meta:
         verbose_name = _("Idea")

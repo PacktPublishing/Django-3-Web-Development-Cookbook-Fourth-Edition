@@ -10,7 +10,7 @@ from .models import Idea
 class IdeaAdmin(admin.ModelAdmin):
     fieldsets = [
         (_("Author and Category"), {
-            "fields": ["author", "category"],
+            "fields": ["author", "categories"],
         }),
         (_("Title and Content"), {
             "fields": get_multilingual_field_names("title") +
@@ -20,3 +20,4 @@ class IdeaAdmin(admin.ModelAdmin):
             "fields": ["meta_keywords", "meta_description", "meta_author", "meta_copyright"]
         }),
     ]
+    filter_horizontal = ["categories"]
