@@ -16,7 +16,9 @@ from myproject.apps.core.models import (
 )
 
 
-FavoriteObjectBase = generic_relation(is_required=True)
+FavoriteObjectBase = generic_relation(
+    is_required=True,
+)
 
 
 OwnerBase = generic_relation(
