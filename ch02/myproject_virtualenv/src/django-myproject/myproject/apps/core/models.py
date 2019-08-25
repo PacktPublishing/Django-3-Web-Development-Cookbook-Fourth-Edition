@@ -70,6 +70,9 @@ class CreationModificationDateBase(models.Model):
         editable=False,
     )
 
+    class Meta:
+        abstract = True
+
     def save(self, *args, **kwargs):
         if not self.created:
             self.created = timezone_now()
@@ -85,55 +88,56 @@ class CreationModificationDateBase(models.Model):
     def test(self):
         print("test() from CreationModificationDateBase called")
 
-    class Meta:
-        abstract = True
-
 
 class MetaTagsBase(models.Model):
     """
     Abstract base class for generating meta tags
     """
-    class Meta:
-        abstract = True
-
     meta_keywords = models.CharField(
         _("Keywords"),
         max_length=255,
         blank=True,
-        help_text=_("Separate keywords with commas."))
+        help_text=_("Separate keywords with commas."),
+    )
     meta_description = models.CharField(
         _("Description"),
         max_length=255,
-        blank=True)
+        blank=True,
+    )
     meta_author = models.CharField(
         _("Author"),
         max_length=255,
-        blank=True)
+        blank=True,
+    )
     meta_copyright = models.CharField(
         _("Copyright"),
         max_length=255,
-        blank=True)
+        blank=True,
+    )
 
-    def get_meta(self, name, content):
+    class Meta:
+        abstract = True
+
+    def get_meta_field(self, name, content):
         tag = ""
         if name and content:
-            tag = render_to_string("utils/meta.html", {
+            tag = render_to_string("core/includes/meta_field.html", {
                 "name": name,
                 "content": content,
             })
         return mark_safe(tag)
 
     def get_meta_keywords(self):
-        return self.get_meta("keywords", self.meta_keywords)
+        return self.get_meta_field("keywords", self.meta_keywords)
 
     def get_meta_description(self):
-        return self.get_meta("description", self.meta_description)
+        return self.get_meta_field("description", self.meta_description)
 
     def get_meta_author(self):
-        return self.get_meta("author", self.meta_author)
+        return self.get_meta_field("author", self.meta_author)
 
     def get_meta_copyright(self):
-        return self.get_meta("copyright", self.meta_copyright)
+        return self.get_meta_field("copyright", self.meta_copyright)
 
     def get_meta_tags(self):
         return mark_safe("\n".join((
