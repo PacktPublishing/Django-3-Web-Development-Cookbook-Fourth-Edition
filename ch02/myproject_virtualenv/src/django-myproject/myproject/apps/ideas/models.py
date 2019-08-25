@@ -117,3 +117,15 @@ class Idea(CreationModificationDateBase, MetaTagsBase, UrlBase):
             raise ValidationError(_("Each idea of the same user should have a unique title."))
         if not re.match(r"^\S.*\S$", title_value):
             raise ValidationError(_("The title cannot start or end with a whitespace."))
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        print("save() from Idea called")
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        print("delete() from Idea called")
+
+    def test(self):
+        super().test()
+        print("test() from Idea called")
