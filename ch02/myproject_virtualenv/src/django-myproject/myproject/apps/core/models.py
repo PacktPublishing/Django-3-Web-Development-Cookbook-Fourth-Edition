@@ -164,7 +164,6 @@ def object_relation_base_factory(
         prefix_verbose=None,
         add_related_name=False,
         limit_content_type_choices_to=None,
-        limit_object_choices_to=None,
         is_required=False):
     """
     Returns a mixin class for generic foreign keys using
@@ -195,7 +194,6 @@ def object_relation_base_factory(
 
     prefix_verbose = prefix_verbose or _("Related object")
     limit_content_type_choices_to = limit_content_type_choices_to or {}
-    limit_object_choices_to = limit_object_choices_to or {}
 
     content_type_field = f"{p}content_type"
     object_id_field = f"{p}object_id"
@@ -237,9 +235,6 @@ def object_relation_base_factory(
         help_text=_("Please enter the ID of the related object."),
         max_length=255,
         default="")  # for migrations
-    object_id.limit_choices_to = limit_object_choices_to
-    # can be retrieved by
-    # MyModel._meta.get_field("object_id").limit_choices_to
 
     content_object = GenericForeignKey(
         ct_field=content_type_field,
