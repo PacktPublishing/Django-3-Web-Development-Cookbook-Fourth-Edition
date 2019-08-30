@@ -2,7 +2,6 @@ from urllib.parse import urlparse, urlunparse
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.utils.timezone import now as timezone_now
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
@@ -62,21 +61,18 @@ class CreationModificationDateBase(models.Model):
 
     created = models.DateTimeField(
         _("Creation Date and Time"),
-        editable=False,
+        auto_now_add=True,
     )
 
     modified = models.DateTimeField(
         _("Modification Date and Time"),
-        editable=False,
+        auto_now=True,
     )
 
     class Meta:
         abstract = True
 
     def save(self, *args, **kwargs):
-        if not self.created:
-            self.created = timezone_now()
-        self.modified = timezone_now()
         super().save(*args, **kwargs)
         print("save() from CreationModificationDateBase called")
     save.alters_data = True

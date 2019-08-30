@@ -34,8 +34,8 @@ class Migration(migrations.Migration):
             name='Idea',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(editable=False, verbose_name='Creation Date and Time')),
-                ('modified', models.DateTimeField(editable=False, verbose_name='Modification Date and Time')),
+                ('created', models.DateTimeField(auto_now_add=True, verbose_name='Creation Date and Time')),
+                ('modified', models.DateTimeField(auto_now=True, verbose_name='Modification Date and Time')),
                 ('meta_keywords', models.CharField(blank=True, help_text='Separate keywords with commas.', max_length=255, verbose_name='Keywords')),
                 ('meta_description', models.CharField(blank=True, max_length=255, verbose_name='Description')),
                 ('meta_author', models.CharField(blank=True, max_length=255, verbose_name='Author')),
