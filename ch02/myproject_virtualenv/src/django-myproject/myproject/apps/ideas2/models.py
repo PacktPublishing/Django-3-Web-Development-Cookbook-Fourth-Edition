@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from myproject.apps.core.model_fields import TranslatedField
 from myproject.apps.core.models import (
@@ -104,3 +104,28 @@ class IdeaTranslations(models.Model):
 
     def __str__(self):
         return self.title
+
+
+"""
+>>> from django.conf import settings
+>>> from django.db import models
+>>> lang_code = input("Enter language code: ")
+
+>>> if lang_code == settings.LANGUAGE_CODE:
+...     qs = Idea.objects.annotate(
+...         title_translation=models.F("title"),
+...         content_translation=models.F("content"),
+...     )
+... else:
+...     qs = Idea.objects.filter(
+...         translations__language=lang_code,
+...     ).annotate(
+...         title_translation=models.F("translations__title"),
+...         content_translation=models.F("translations__content"),
+...     )
+
+>>> qs = qs.order_by("title_translation")
+
+>>> for idea in qs:
+...     print(idea.title_translation)
+"""

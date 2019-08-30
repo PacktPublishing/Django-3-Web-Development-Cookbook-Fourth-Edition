@@ -89,11 +89,12 @@ class TranslatedField(object):
     def __get__(self, instance, owner):
         lang_code = translation.get_language()
         if lang_code == settings.LANGUAGE_CODE:
-            # The fields of the default language are the main model
+            # The fields of the default language are in the main model
             return getattr(instance, self.field_name)
         else:
-            # The fields of the other languages are the translation model, but falls back to the main model
-            translations = (
-                instance.translations.filter(language=lang_code).first() or instance
-            )
+            # The fields of the other languages are in the translation
+            # model, but falls back to the main model
+            translations = instance.translations.filter(
+                language=lang_code,
+            ).first() or instance
             return getattr(translations, self.field_name)

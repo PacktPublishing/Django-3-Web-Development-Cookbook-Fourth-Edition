@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 def get_multilingual_field_names(field_name):
@@ -22,5 +22,7 @@ class LanguageChoicesForm(forms.ModelForm):
         ]
         super().__init__(*args, **kwargs)
         self.fields["language"] = forms.ChoiceField(
-            label=_("Language"), choices=LANGUAGES_EXCEPT_THE_DEFAULT, required=True
+            label=_("Language"),
+            choices=LANGUAGES_EXCEPT_THE_DEFAULT,
+            required=True,
         )
