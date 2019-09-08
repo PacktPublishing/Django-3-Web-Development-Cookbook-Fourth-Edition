@@ -13,6 +13,14 @@ from django.utils.timezone import now as timezone_now
 from myproject.apps.core.model_fields import TranslatedField
 from myproject.apps.core.models import CreationModificationDateBase, UrlBase
 
+RATING_CHOICES = (
+    (1, "★☆☆☆☆"),
+    (2, "★★☆☆☆"),
+    (3, "★★★☆☆"),
+    (4, "★★★★☆"),
+    (5, "★★★★★"),
+)
+
 
 def upload_to(instance, filename):
     now = timezone_now()
@@ -44,7 +52,7 @@ class Idea(CreationModificationDateBase, UrlBase):
     )
     picture_thumbnail = ImageSpecField(
         source="picture",
-        processors=[ResizeToFill(150, 150)],
+        processors=[ResizeToFill(728, 250)],
         format="PNG",
         options={"quality": 60},
     )
@@ -53,7 +61,9 @@ class Idea(CreationModificationDateBase, UrlBase):
         verbose_name=_("Categories"),
         related_name="category_ideas",
     )
-
+    rating = models.PositiveIntegerField(
+        _("Rating"), choices=RATING_CHOICES, blank=True, null=True
+    )
     translated_title = TranslatedField("title")
     translated_content = TranslatedField("content")
 

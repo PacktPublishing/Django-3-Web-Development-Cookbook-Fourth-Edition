@@ -49,4 +49,5 @@ class IdeaAdmin(admin.ModelAdmin):
     fieldsets = [
         (_("Author and Category"), {"fields": ["author", "categories"]}),
         (_("Title and Content"), {"fields": ["title", "content", "picture"]}),
+        (_("Ratings"), {"fields": ["rating"]}),
     ]

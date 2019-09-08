@@ -17,6 +17,10 @@
   <body>
     <div class="container my-5">
       {% block content %}
+          <div class="row">
+            <div class="col-lg-4">{% block sidebar %}{% endblock %}</div>
+            <div class="col-lg-8">{% block main %}{% endblock %}</div>
+          </div>
       {% endblock %}
     </div>
     <!-- Optional JavaScript -->

@@ -1,0 +1,32 @@
+{% load i18n utility_tags %}
+{% if object_list.has_other_pages %}
+    <ul class="pagination">
+        {% if object_list.has_previous %}
+            <li><a href="{% modify_query page=object_list.previous_page_number %}">
+                &laquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+
+        {% for page_number in object_list.paginator.page_range %}
+            {% if page_number == object_list.number %}
+                <li class="active">
+            <span>{{ page_number }}
+                <span class="sr-only">(current)</span></span>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% modify_query page=page_number %}">
+                        {{ page_number }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if object_list.has_next %}
+            <li><a href="{% modify_query page=object_list.next_page_number %}">
+                &raquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+{% endif %}

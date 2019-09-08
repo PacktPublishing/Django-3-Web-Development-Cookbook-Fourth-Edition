@@ -1,17 +1,24 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n utility_tags %}
 
-{% block content %}
+{% block sidebar %}
+    {% include "ideas/includes/filters.html" %}
+{% endblock %}
+
+{% block main %}
     <h1>{% trans "Ideas" %}</h1>
     {% if object_list %}
         {% for idea in object_list %}
-            <a href="{{ idea.get_url_path }}">
-                <figure>
-                    <img src="{{ idea.picture_thumbnail.url }}" alt="" />
-                    <figcaption>{{ idea.translated_title }}</figcaption>
-                </figure>
+            <a href="{{ idea.get_url_path }}" class="d-block my-3">
+                <div class="card">
+                  <img src="{{ idea.picture_thumbnail.url }}" alt="" />
+                  <div class="card-body">
+                    <p class="card-text">{{ idea.translated_title }}</p>
+                  </div>
+                </div>
             </a>
         {% endfor %}
+        {% include "misc/includes/pagination.html" %}
     {% else %}
         <p>There are no ideas yet.</p>
     {% endif %}
