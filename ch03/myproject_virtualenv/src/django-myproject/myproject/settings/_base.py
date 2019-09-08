@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     # third-party
     "imagekit",
     "crispy_forms",
+    "django_json_ld",
     # local
     "myproject.apps.core",
     "myproject.apps.categories",
@@ -95,6 +96,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
+                "myproject.apps.core.context_processors.website_url",
             ]
         },
     }
@@ -194,3 +196,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "ideas:idea_list"
+
+PAGE_SIZE = 2

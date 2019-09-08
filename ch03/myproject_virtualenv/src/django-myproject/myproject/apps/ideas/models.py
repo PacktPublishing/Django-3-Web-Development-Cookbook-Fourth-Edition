@@ -13,13 +13,7 @@ from django.utils.timezone import now as timezone_now
 from myproject.apps.core.model_fields import TranslatedField
 from myproject.apps.core.models import CreationModificationDateBase, UrlBase
 
-RATING_CHOICES = (
-    (1, "★☆☆☆☆"),
-    (2, "★★☆☆☆"),
-    (3, "★★★☆☆"),
-    (4, "★★★★☆"),
-    (5, "★★★★★"),
-)
+RATING_CHOICES = ((1, "★☆☆☆☆"), (2, "★★☆☆☆"), (3, "★★★☆☆"), (4, "★★★★☆"), (5, "★★★★★"))
 
 
 def upload_to(instance, filename):
@@ -44,17 +38,17 @@ class Idea(CreationModificationDateBase, UrlBase):
     picture = models.ImageField(
         _("Picture"), upload_to=upload_to, blank=True, null=True
     )
-    picture_large = ImageSpecField(
+    picture_social = ImageSpecField(
         source="picture",
-        processors=[ResizeToFill(800, 400)],
-        format="PNG",
-        options={"quality": 60},
+        processors=[ResizeToFill(1024, 512)],
+        format="JPEG",
+        options={"quality": 100},
+    )
+    picture_large = ImageSpecField(
+        source="picture", processors=[ResizeToFill(800, 400)], format="PNG"
     )
     picture_thumbnail = ImageSpecField(
-        source="picture",
-        processors=[ResizeToFill(728, 250)],
-        format="PNG",
-        options={"quality": 60},
+        source="picture", processors=[ResizeToFill(728, 250)], format="PNG"
     )
     categories = models.ManyToManyField(
         "categories.Category",
@@ -76,6 +70,26 @@ class Idea(CreationModificationDateBase, UrlBase):
 
     def get_url_path(self):
         return reverse("ideas:idea_detail", kwargs={"pk": self.pk})
+
+    @property
+    def structured_data(self):
+        from django.utils.translation import get_language
+
+        lang_code = get_language()
+        data = {
+            "@type": "CreativeWork",
+            "name": self.translated_title,
+            "description": self.translated_content,
+            "inLanguage": lang_code,
+        }
+        if self.author:
+            data["author"] = {
+                "@type": "Person",
+                "name": self.author.get_full_name() or self.author.username,
+            }
+        if self.picture:
+            data["image"] = self.picture_social.url
+        return data
 
 
 class IdeaTranslations(models.Model):

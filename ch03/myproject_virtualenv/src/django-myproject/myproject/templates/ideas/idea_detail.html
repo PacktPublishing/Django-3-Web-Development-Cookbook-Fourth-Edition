@@ -1,5 +1,33 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n json_ld %}
+
+{% block meta_tags %}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ WEBSITE_URL }}{{ request.path }}" />
+    <meta property="og:title" content="{{ idea.translated_title }}" />
+    {% if idea.picture_social %}
+        <meta property="og:image" content="{{ idea.picture_social.url }}" />
+        <!-- Next tags are optional but recommended -->
+        <meta property="og:image:width" content="{{ idea.picture_social.width }}" />
+        <meta property="og:image:height" content="{{ idea.picture_social.height }}" />
+    {% endif %}
+    <meta property="og:description" content="{{ idea.translated_content }}" />
+    <meta property="og:site_name" content="MyProject" />
+    <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@DjangoTricks">
+    <meta name="twitter:creator" content="@archatas">
+    <meta name="twitter:url" content="{{ WEBSITE_URL }}{{ request.path }}">
+    <meta name="twitter:title" content="{{ idea.translated_title }}">
+    <meta name="twitter:description" content="{{ idea.translated_content }}">
+    {% if idea.picture_social %}
+        <meta name="twitter:image" content="{{ idea.picture_social.url }}">
+    {% endif %}
+
+    {% render_json_ld idea.structured_data %}
+{% endblock %}
+
 
 {% block content %}
     <a href="{% url "ideas:idea_list" %}">{% trans "List of ideas" %}</a>

@@ -1,7 +1,7 @@
 {% load i18n utility_tags %}
 <div class="filters panel-group" id="accordion">
     {% with title=_('Author') selected=facets.selected.author %}
-        <div class="panel panel-default">
+        <div class="panel panel-default my-3">
             {% include "misc/includes/filter_heading.html" with title=title %}
             <div id="collapse-{{ title|slugify }}"
                  class="panel-collapse{% if not selected %} collapse{% endif %}">
@@ -19,7 +19,7 @@
         </div>
     {% endwith %}
     {% with title=_('Category') selected=facets.selected.category %}
-        <div class="panel panel-default">
+        <div class="panel panel-default my-3">
             {% include "misc/includes/filter_heading.html" with title=title %}
             <div id="collapse-{{ title|slugify }}"
                  class="panel-collapse{% if not selected %} collapse{% endif %}">
@@ -37,7 +37,7 @@
         </div>
     {% endwith %}
     {% with title=_('Rating') selected=facets.selected.rating %}
-        <div class="panel panel-default">
+        <div class="panel panel-default my-3">
             {% include "misc/includes/filter_heading.html" with title=title %}
             <div id="collapse-{{ title|slugify }}"
                  class="panel-collapse{% if not selected %} collapse{% endif %}">
