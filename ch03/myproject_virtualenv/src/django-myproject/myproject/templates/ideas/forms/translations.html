@@ -1,0 +1,16 @@
+{% load i18n crispy_forms_tags %}
+<section id="translations_section" class="formset my-3">
+    {{ translations_formset.management_form }}
+    <h3>{% trans "Translations" %}</h3>
+    <div class="formset-forms">
+        {% for formset_form in translations_formset %}
+            <div class="formset-form">
+                {% crispy formset_form %}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" class="btn btn-primary btn-sm add-inline-form">{% trans "Add translations to another language" %}</button>
+    <div class="empty-form d-none">
+        {% crispy translations_formset.empty_form %}
+    </div>
+</section>

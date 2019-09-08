@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags static %}
+
+{% block content %}
+    <a href="{% url "ideas:idea_list" %}">{% trans "List of ideas" %}</a>
+    <h1>
+        {% if idea %}
+            {% blocktrans trimmed with title=idea.translated_title %}
+                Change Idea "{{ title }}
+            {% endblocktrans %}
+        {% else %}
+            {% trans "Add Idea" %}
+        {% endif %}
+    </h1>
+    {% crispy form %}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'site/js/inlines.js' %}"></script>
+{% endblock %}

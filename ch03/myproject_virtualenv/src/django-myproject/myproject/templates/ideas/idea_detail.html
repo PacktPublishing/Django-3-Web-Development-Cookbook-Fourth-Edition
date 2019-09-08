@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <a href="{% url "ideas:idea_list" %}">{% trans "List of ideas" %}</a>
+    <h1>
+        {% blocktrans trimmed with title=idea.translated_title %}
+            Idea "{{ title }}"
+        {% endblocktrans %}
+    </h1>
+    <img src="{{ idea.picture_large.url }}" alt="" />
+    {{ idea.translated_content|linebreaks|urlize }}
+    <p>
+        {% for category in idea.categories.all %}
+            <span class="badge badge-pill badge-info">{{ category.translated_title }}</span>
+        {% endfor %}
+    </p>
+    <a href="{% url 'ideas:change_idea' pk=idea.pk %}" class="btn btn-primary">{% trans "Change this idea" %}</a>
+    <a href="{% url 'ideas:delete_idea' pk=idea.pk %}" class="btn btn-danger">{% trans "Delete this idea" %}</a>
+{% endblock %}

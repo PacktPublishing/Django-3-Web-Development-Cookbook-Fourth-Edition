@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div style="margin-left: 160px; padding-left: 10px;">
+    {% if widget.is_initial %}
+        <a href="{{ widget.value.url }}">
+            <img src="{{ widget.value.url }}" width="624" height="auto" alt="" />
+        </a>
+        {% if not widget.required %}<br />
+            {{ widget.clear_checkbox_label }}:
+            <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}">
+        {% endif %}<br />
+        {{ widget.input_text }}:
+    {% endif %}
+    <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+</div>
+<div class="help">
+    {% trans "Available formats are JPG, GIF, and PNG." %}
+    {% trans "Minimal size is 800 x 800 px." %}
+</div>
