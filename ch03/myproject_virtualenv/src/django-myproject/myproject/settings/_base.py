@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "imagekit",
     "crispy_forms",
     "django_json_ld",
+    "qr_code",
     # local
     "myproject.apps.core",
     "myproject.apps.categories",

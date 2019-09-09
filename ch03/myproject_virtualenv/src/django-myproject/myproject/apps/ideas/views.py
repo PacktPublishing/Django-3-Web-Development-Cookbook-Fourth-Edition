@@ -226,3 +226,29 @@ class IdeaListView(View):
         except EmptyPage:
             page = paginator.page(paginator.num_pages)
         return page
+
+
+def idea_handout_pdf(request, pk):
+    ## for macOS requires:
+    ## brew install python3 cairo pango gdk-pixbuf libffi
+    from django.template.loader import render_to_string
+    from django.utils.timezone import now as timezone_now
+    from django.utils.text import slugify
+
+    from weasyprint import HTML
+    from weasyprint.fonts import FontConfiguration
+
+    idea = get_object_or_404(Idea, pk=pk)
+
+    context = {"idea": idea}
+    html = render_to_string('ideas/idea_handout_pdf.html', context)
+
+    font_config = FontConfiguration()
+    from django.http import HttpResponse
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename={date}-{name}-handout.pdf'.format(
+        date=timezone_now().strftime('%Y-%m-%d'),
+        name=slugify(idea.translated_title),
+    )
+    HTML(string=html).write_pdf(response, font_config=font_config)
+    return response

@@ -28,5 +28,8 @@ urlpatterns = i18n_patterns(
     path("ideas/", include(("myproject.apps.ideas.urls", "ideas"), namespace="ideas")),
     # path('search/', include('haystack.urls')),
 )
+urlpatterns += [
+    path("qr_code/", include("qr_code.urls", namespace="qr_code")),
+]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static("/media/", document_root=settings.MEDIA_ROOT)
