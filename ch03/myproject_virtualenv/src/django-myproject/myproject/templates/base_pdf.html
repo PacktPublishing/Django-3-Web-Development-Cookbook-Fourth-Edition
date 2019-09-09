@@ -11,13 +11,35 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>{% trans "Hello, World!" %}</title>
+
+    <style>
+    @page {
+        size: "A4";
+        margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+    }
+    footer {
+        position: fixed;
+        bottom: -2.5cm;
+        width: 100%;
+        text-align: center;
+        font-size: 10pt;
+    }
+    footer img {
+        height: 1.5cm;
+    }
+    </style>
+
     {% block meta_tags %}{% endblock %}
 </head>
 <body>
-<div class="container">
-    {% block content %}
-    {% endblock %}
-</div>
-{% block js %}{% endblock %}
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <img alt="" src="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!-- Created with Inkscape (http://www.inkscape.org/) --%3E%3Csvg xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:cc='http://creativecommons.org/ns%23' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns%23' xmlns:svg='http://www.w3.org/2000/svg' xmlns='http://www.w3.org/2000/svg' xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd' xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape' width='51.404762mm' height='51.404762mm' viewBox='0 0 51.404762 51.404762' version='1.1' id='svg8' inkscape:version='0.92.2 5c3e80d, 2017-08-06' sodipodi:docname='dummy-favicon.svg'%3E%3Cdefs id='defs2' /%3E%3Csodipodi:namedview id='base' pagecolor='%23ffffff' bordercolor='%23666666' borderopacity='1.0' inkscape:pageopacity='0.0' inkscape:pageshadow='2' inkscape:zoom='0.7' inkscape:cx='-55.818923' inkscape:cy='-83.685903' inkscape:document-units='mm' inkscape:current-layer='layer1' showgrid='false' inkscape:window-width='1440' inkscape:window-height='815' inkscape:window-x='0' inkscape:window-y='1' inkscape:window-maximized='1' showborder='false' fit-margin-top='0' fit-margin-left='0' fit-margin-right='0' fit-margin-bottom='0' /%3E%3Cmetadata id='metadata5'%3E%3Crdf:RDF%3E%3Ccc:Work rdf:about=''%3E%3Cdc:format%3Eimage/svg+xml%3C/dc:format%3E%3Cdc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage' /%3E%3Cdc:title%3E%3C/dc:title%3E%3C/cc:Work%3E%3C/rdf:RDF%3E%3C/metadata%3E%3Cg inkscape:label='Layer 1' inkscape:groupmode='layer' id='layer1' transform='translate(-66.901783,-38.842258)'%3E%3Ccircle style='opacity:1;fill:%23204a87;fill-opacity:1;stroke:none;stroke-width:0.29501042;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1' id='path815' cx='92.604164' cy='64.54464' r='25.702381' inkscape:export-xdpi='395.29413' inkscape:export-ydpi='395.29413' /%3E%3Ccircle r='16.682716' cy='64.54464' cx='92.604164' id='circle817' style='opacity:1;fill:%2373d216;fill-opacity:1;stroke:none;stroke-width:0.19148323;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1' inkscape:export-xdpi='395.29413' inkscape:export-ydpi='395.29413' /%3E%3Ccircle style='opacity:1;fill:%23fce94f;fill-opacity:1;stroke:none;stroke-width:0.09658331;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1' id='circle819' cx='92.604164' cy='64.54464' r='8.41469' inkscape:export-xdpi='395.29413' inkscape:export-ydpi='395.29413' /%3E%3C/g%3E%3C/svg%3E%0A" />
+        <br />
+        {% trans "Printed from MyProject" %}
+    </footer>
 </body>
 </html>

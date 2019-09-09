@@ -43,6 +43,7 @@
             <span class="badge badge-pill badge-info">{{ category.translated_title }}</span>
         {% endfor %}
     </p>
+    <a href="{% url 'ideas:idea_handout' pk=idea.pk %}" class="btn btn-primary">{% trans "Download handout" %}</a>
     <a href="{% url 'ideas:change_idea' pk=idea.pk %}" class="btn btn-primary">{% trans "Change this idea" %}</a>
     <a href="{% url 'ideas:delete_idea' pk=idea.pk %}" class="btn btn-danger">{% trans "Delete this idea" %}</a>
 {% endblock %}
