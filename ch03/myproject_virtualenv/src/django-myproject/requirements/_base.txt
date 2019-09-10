@@ -6,6 +6,7 @@ defusedxml==0.6.0
 Django==2.2.4
 django-appconf==1.0.3
 django-crispy-forms==1.7.2
+django-haystack==2.8.1
 django-imagekit==4.0.2
 django-json-ld==0.0.4
 django-qr-code==1.0.0
@@ -22,3 +23,4 @@ sqlparse==0.3.0
 tinycss2==1.0.2
 WeasyPrint==48
 webencodings==0.5.1
+Whoosh==2.7.4

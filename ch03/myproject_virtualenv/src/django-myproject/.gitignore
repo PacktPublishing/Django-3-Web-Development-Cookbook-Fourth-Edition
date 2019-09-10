@@ -46,5 +46,8 @@ venv/
 /static/
 !/static/.gitkeep
 
+/tmp/
+!/tmp/.gitkeep
+
 # Secrets
 secrets.json

@@ -26,7 +26,7 @@ urlpatterns = i18n_patterns(
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("ideas/", include(("myproject.apps.ideas.urls", "ideas"), namespace="ideas")),
-    # path('search/', include('haystack.urls')),
+    path("search/", include("haystack.urls")),
 )
 urlpatterns += [
     path("qr_code/", include("qr_code.urls", namespace="qr_code")),
