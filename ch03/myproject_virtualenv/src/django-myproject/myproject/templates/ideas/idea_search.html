@@ -1,17 +1,17 @@
 {% extends "base.html" %}
-{% load i18n utility_tags %}
+{% load i18n crispy_forms_tags utility_tags %}
 
 {% block sidebar %}
-    {% include "ideas/includes/filters.html" %}
+    {% crispy form %}
 {% endblock %}
 
 {% block main %}
-    <h1>{% trans "Ideas" %}</h1>
+    <h1>{% trans "Search Results" %}</h1>
     {% if object_list %}
         {% for idea in object_list %}
             <a href="{{ idea.get_url_path }}" class="d-block my-3">
                 <div class="card">
-                  <img src="{{ idea.picture_thumbnail.url }}" alt="" />
+                  <img src="{{ idea.picture_thumbnail_url }}" alt="" />
                   <div class="card-body">
                     <p class="card-text">{{ idea.translated_title }}</p>
                   </div>
@@ -20,7 +20,6 @@
         {% endfor %}
         {% include "misc/includes/pagination.html" %}
     {% else %}
-        <p>{% trans "There are no ideas yet." %}</p>
+        <p>{% trans "No ideas found." %}</p>
     {% endif %}
-    <a href="{% url 'ideas:add_idea' %}" class="btn btn-primary">{% trans "Add idea" %}</a>
 {% endblock %}

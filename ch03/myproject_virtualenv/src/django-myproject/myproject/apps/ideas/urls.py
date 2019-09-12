@@ -9,12 +9,14 @@ from .views import (
     idea_list,
     IdeaListView,
     idea_handout_pdf,
+    search_with_elasticsearch,
 )
 
 urlpatterns = [
     # path('', IdeaList.as_view(), name='idea_list'),
     # path('', idea_list, name='idea_list'),
     path("", IdeaListView.as_view(), name="idea_list"),
+    path("search/", search_with_elasticsearch, name="search_ideas"),
     path("add/", add_idea, name="add_idea"),
     path("<uuid:pk>/", IdeaDetail.as_view(), name="idea_detail"),
     path(

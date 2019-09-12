@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django_json_ld",
     "qr_code",
     "haystack",
+    "django_elasticsearch_dsl",
     # local
     "myproject.apps.core",
     "myproject.apps.categories",
@@ -213,3 +214,9 @@ lang_code_underscored = LANGUAGE_CODE.replace("-", "_")
 HAYSTACK_CONNECTIONS["default"] = HAYSTACK_CONNECTIONS[
     f"default_{lang_code_underscored}"
 ]
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}

@@ -5,8 +5,9 @@ from django.forms import modelformset_factory
 from django.conf import settings
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.views.generic import View
+from django.utils.functional import LazyObject
 
-from .forms import IdeaForm, IdeaTranslationsForm, IdeaFilterForm
+from .forms import IdeaForm, IdeaTranslationsForm, IdeaFilterForm, IdeaSearchForm
 from .models import Idea, IdeaTranslations, RATING_CHOICES
 
 
@@ -241,14 +242,70 @@ def idea_handout_pdf(request, pk):
     idea = get_object_or_404(Idea, pk=pk)
 
     context = {"idea": idea}
-    html = render_to_string('ideas/idea_handout_pdf.html', context)
+    html = render_to_string("ideas/idea_handout_pdf.html", context)
 
     font_config = FontConfiguration()
     from django.http import HttpResponse
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename={date}-{name}-handout.pdf'.format(
-        date=timezone_now().strftime('%Y-%m-%d'),
-        name=slugify(idea.translated_title),
+
+    response = HttpResponse(content_type="application/pdf")
+    response[
+        "Content-Disposition"
+    ] = "inline; filename={date}-{name}-handout.pdf".format(
+        date=timezone_now().strftime("%Y-%m-%d"), name=slugify(idea.translated_title)
     )
     HTML(string=html).write_pdf(response, font_config=font_config)
     return response
+
+
+class SearchResults(LazyObject):
+    def __init__(self, search_object):
+        self._wrapped = search_object
+
+    def __len__(self):
+        return self._wrapped.count()
+
+    def __getitem__(self, index):
+        search_results = self._wrapped[index]
+        if isinstance(index, slice):
+            search_results = list(search_results)
+        return search_results
+
+
+def search_with_elasticsearch(request):
+    from .documents import IdeaDocument
+    from elasticsearch_dsl.query import Q
+
+    form = IdeaSearchForm(request, data=request.GET)
+
+    search = IdeaDocument.search()
+
+    if form.is_valid():
+        value = form.cleaned_data["q"]
+        lang_code_underscored = request.LANGUAGE_CODE.replace("-", "_")
+        search = search.query(
+            Q("match_phrase", **{f"title_{lang_code_underscored}": value})
+            | Q("match_phrase", **{f"content_{lang_code_underscored}": value})
+            | Q(
+                "nested",
+                path="categories",
+                query=Q(
+                    "match_phrase",
+                    **{f"category__title_{lang_code_underscored}": value},
+                ),
+            )
+        )
+    search_results = SearchResults(search)
+
+    paginator = Paginator(search_results, PAGE_SIZE)
+    page_number = request.GET.get("page")
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, show first page.
+        page = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, show last existing page.
+        page = paginator.page(paginator.num_pages)
+
+    context = {"form": form, "object_list": page}
+    return render(request, "ideas/idea_search.html", context)

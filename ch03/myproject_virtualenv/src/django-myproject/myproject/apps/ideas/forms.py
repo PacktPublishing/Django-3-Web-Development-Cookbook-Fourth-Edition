@@ -128,3 +128,22 @@ class IdeaFilterForm(forms.Form):
     rating = forms.ChoiceField(
         label=_("Rating"), required=False, choices=RATING_CHOICES
     )
+
+
+class IdeaSearchForm(forms.Form):
+    q = forms.CharField(
+        label=_("Search for"),
+        required=False,
+    )
+
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
+
+        self.helper = helper.FormHelper()
+        self.helper.form_action = self.request.path
+        self.helper.form_method = "GET"
+        self.helper.layout = layout.Layout(
+            layout.Field("q", css_class="input-block-level"),
+            layout.Submit("search", _("Search"))
+        )
