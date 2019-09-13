@@ -290,7 +290,7 @@ def search_with_elasticsearch(request):
                 path="categories",
                 query=Q(
                     "match_phrase",
-                    **{f"category__title_{lang_code_underscored}": value},
+                    **{f"categories__title_{lang_code_underscored}": value},
                 ),
             )
         )
