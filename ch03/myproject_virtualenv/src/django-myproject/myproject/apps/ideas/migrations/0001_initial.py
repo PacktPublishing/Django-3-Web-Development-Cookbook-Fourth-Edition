@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('title', models.CharField(max_length=200, verbose_name='Title')),
                 ('content', models.TextField(verbose_name='Content')),
-                ('picture', models.ImageField(blank=True, null=True, upload_to=myproject.apps.ideas.models.upload_to, verbose_name='Picture')),
+                ('picture', models.ImageField(upload_to=myproject.apps.ideas.models.upload_to, verbose_name='Picture')),
                 ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='authored_ideas', to=settings.AUTH_USER_MODEL, verbose_name='Author')),
                 ('categories', models.ManyToManyField(related_name='category_ideas', to='categories.Category', verbose_name='Categories')),
             ],

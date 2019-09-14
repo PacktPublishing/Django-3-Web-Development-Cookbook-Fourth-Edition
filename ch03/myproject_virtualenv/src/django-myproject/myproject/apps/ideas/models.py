@@ -1,3 +1,4 @@
+import contextlib
 import os
 import uuid
 
@@ -36,7 +37,7 @@ class Idea(CreationModificationDateBase, UrlBase):
     title = models.CharField(_("Title"), max_length=200)
     content = models.TextField(_("Content"))
     picture = models.ImageField(
-        _("Picture"), upload_to=upload_to, blank=True, null=True
+        _("Picture"), upload_to=upload_to
     )
     picture_social = ImageSpecField(
         source="picture",
@@ -90,6 +91,15 @@ class Idea(CreationModificationDateBase, UrlBase):
         if self.picture:
             data["image"] = self.picture_social.url
         return data
+
+    def delete(self, *args, **kwargs):
+        if self.picture:
+            with contextlib.suppress(FileNotFoundError):
+                os.remove(self.picture_social.path)
+                os.remove(self.picture_large.path)
+                os.remove(self.picture_thumbnail.path)
+            self.picture.delete()
+        super().delete(*args, **kwargs)
 
 
 class IdeaTranslations(models.Model):
