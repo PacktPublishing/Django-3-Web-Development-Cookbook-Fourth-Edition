@@ -12,8 +12,8 @@ from .views import (
 )
 
 urlpatterns = [
-    # path('', IdeaList.as_view(), name='idea_list'),
-    # path('', idea_list, name='idea_list'),
+    # path("", IdeaList.as_view(), name="idea_list"),
+    # path("", idea_list, name="idea_list"),
     path("", IdeaListView.as_view(), name="idea_list"),
     path("search/", search_with_elasticsearch, name="search_ideas"),
     path("add/", add_or_change_idea, name="add_idea"),

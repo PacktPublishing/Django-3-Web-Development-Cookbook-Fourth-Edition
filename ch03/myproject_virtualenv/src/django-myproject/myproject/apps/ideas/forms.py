@@ -69,8 +69,8 @@ class IdeaForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.author = self.request.user
-        instance.save()
         if commit:
+            instance.save()
             self.save_m2m()
         return instance
 
