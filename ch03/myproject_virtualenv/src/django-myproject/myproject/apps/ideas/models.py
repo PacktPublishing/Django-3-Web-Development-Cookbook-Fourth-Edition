@@ -93,11 +93,12 @@ class Idea(CreationModificationDateBase, UrlBase):
         return data
 
     def delete(self, *args, **kwargs):
+        from django.core.files.storage import default_storage
         if self.picture:
             with contextlib.suppress(FileNotFoundError):
-                os.remove(self.picture_social.path)
-                os.remove(self.picture_large.path)
-                os.remove(self.picture_thumbnail.path)
+                default_storage.delete(self.picture_social.path)
+                default_storage.delete(self.picture_large.path)
+                default_storage.delete(self.picture_thumbnail.path)
             self.picture.delete()
         super().delete(*args, **kwargs)
 
