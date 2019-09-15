@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.forms",
     # third-party
     "imagekit",
     "crispy_forms",
@@ -105,6 +106,8 @@ TEMPLATES = [
         },
     }
 ]
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
 
 WSGI_APPLICATION = "myproject.wsgi.application"
 

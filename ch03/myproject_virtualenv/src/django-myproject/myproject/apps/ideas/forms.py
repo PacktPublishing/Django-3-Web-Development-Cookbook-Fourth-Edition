@@ -2,17 +2,15 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import models
-
-from crispy_forms import bootstrap, helper, layout
-
-
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+from crispy_forms import bootstrap, helper, layout
 
 from myproject.apps.categories.models import Category
 
 from .models import Idea, IdeaTranslations, RATING_CHOICES
+
+User = get_user_model()
 
 
 class IdeaForm(forms.ModelForm):
@@ -83,7 +81,7 @@ class IdeaTranslationsForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Idea
+        model = IdeaTranslations
         exclude = ["idea"]
 
     def __init__(self, request, *args, **kwargs):
@@ -131,10 +129,7 @@ class IdeaFilterForm(forms.Form):
 
 
 class IdeaSearchForm(forms.Form):
-    q = forms.CharField(
-        label=_("Search for"),
-        required=False,
-    )
+    q = forms.CharField(label=_("Search for"), required=False)
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
@@ -145,5 +140,5 @@ class IdeaSearchForm(forms.Form):
         self.helper.form_method = "GET"
         self.helper.layout = layout.Layout(
             layout.Field("q", css_class="input-block-level"),
-            layout.Submit("search", _("Search"))
+            layout.Submit("search", _("Search")),
         )
