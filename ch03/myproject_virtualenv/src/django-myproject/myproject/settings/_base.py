@@ -205,6 +205,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "ideas:idea_list"
 
 PAGE_SIZE = 2
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 2
 
 HAYSTACK_CONNECTIONS = {}
 for lang_code, lang_name in LANGUAGES:

@@ -1,6 +1,3 @@
-# -*- coding: UTF-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.utils.translation import get_language, activate
 from django.db import models

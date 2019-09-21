@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-{% load i18n utility_tags %}
+{% load i18n %}
 
-{% block content %}
-    <h2>{% trans "Search" %}</h2>
+{% block sidebar %}
     <form method="get" action="{{ request.path }}">
         <div class="well clearfix">
             {{ form.as_p }}
@@ -11,46 +10,27 @@
             </p>
         </div>
     </form>
+{% endblock %}
 
+{% block main %}
     {% if query %}
-        <h3>{% trans "Results" %}</h3>
+        <h1>{% trans "Search Results" %}</h1>
 
         {% for result in page.object_list %}
-            <p>
-                <a href="{{ result.object.get_url_path }}">
-                    {{ result.object.translated_title }}
+            {% with idea=result.object %}
+                <a href="{{ idea.get_url_path }}" class="d-block my-3">
+                    <div class="card">
+                      <img src="{{ idea.picture_thumbnail.url }}" alt="" />
+                      <div class="card-body">
+                        <p class="card-text">{{ idea.translated_title }}</p>
+                      </div>
+                    </div>
                 </a>
-            </p>
+            {% endwith %}
         {% empty %}
             <p>{% trans "No results found." %}</p>
         {% endfor %}
 
-        {% if page.has_previous or page.has_next %}
-            <nav>
-                <ul class="pager">
-                    <li class="previous">
-                        {% if page.has_previous %}
-                            <a href="{% modify_query page=page.previous_page_number %}">
-                        {% endif %}
-                        <span aria-hidden="true">&laquo;</span>
-                        {% if page.has_previous %}</a>{% endif %}
-                    </li>
-                    {% for num in page.paginator.page_range %}
-                        <li{% if num == page.number %}
-                            class="selected"{% endif %}>
-                            <a href="{% modify_query page=num %}">
-                                {{ num }}</a>
-                        </li>
-                    {% endfor %}
-                    <li class="next">
-                        {% if page.has_next %}
-                            <a href="{% modify_query page=page.next_page_number %}">
-                        {% endif %}
-                        <span aria-hidden="true">&raquo;</span>
-                        {% if page.has_next %}</a>{% endif %}
-                    </li>
-                </ul>
-            </nav>
-        {% endif %}
+        {% include "misc/includes/pagination.html" with object_list=page %}
     {% endif %}
 {% endblock %}

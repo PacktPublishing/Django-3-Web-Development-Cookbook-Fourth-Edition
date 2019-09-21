@@ -1,12 +1,13 @@
 cairocffi==1.1.0
 CairoSVG==2.4.1
 cffi==1.12.3
+coverage==4.5.3
 cssselect2==0.2.2
 defusedxml==0.6.0
 Django==2.2.4
 django-appconf==1.0.3
 django-crispy-forms==1.7.2
-django-elasticsearch-dsl==7.0.0
+django-elasticsearch-dsl==6.4.1
 django-haystack==2.8.1
 django-imagekit==4.0.2
 django-json-ld==0.0.4

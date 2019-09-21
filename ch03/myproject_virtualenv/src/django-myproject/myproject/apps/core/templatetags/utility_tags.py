@@ -26,7 +26,7 @@ def construct_query_string(context, query_params):
 def modify_query(context, *params_to_remove, **params_to_change):
     """Renders a link with modified current query parameters"""
     query_params = []
-    for key, value_list in context["request"].GET.items():
+    for key, value_list in context["request"].GET.lists():
         if not key in params_to_remove:
             # don't add key-value pairs for params_to_remove
             if key in params_to_change:
