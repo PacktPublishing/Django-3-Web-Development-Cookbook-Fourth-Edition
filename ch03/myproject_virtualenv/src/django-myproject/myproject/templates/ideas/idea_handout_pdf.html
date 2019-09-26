@@ -2,7 +2,7 @@
 {% load i18n qr_code %}
 
 {% block content %}
-    <h1 class="h3">{% trans "Handout about Idea" %}</h1>
+    <h1 class="h3">{% trans "Handout" %}</h1>
     <h2 class="h1">{{ idea.translated_title }}</h2>
     <img src="{{ idea.picture_large.url }}" alt="" class="img-responsive w-100" />
     <div class="my-3">{{ idea.translated_content|linebreaks|urlize }}</div>
