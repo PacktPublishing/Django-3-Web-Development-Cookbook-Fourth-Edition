@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags static %}
+
+{% comment %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'site/vendor/jQuery-File-Upload-10.2.0/css/jquery.fileupload-ui.css' %}"/>
+    <link rel="stylesheet" href="{% static 'site/vendor/jQuery-File-Upload-10.2.0/css/jquery.fileupload.css' %}"/>
+{% endblock %}
+{% endcomment %}
+
+{% block content %}
+    <a href="{% url "locations:location_list" %}">{% trans "List of locations" %}</a>
+    <h1>
+        {% if location %}
+            {% blocktrans trimmed with name=location.name %}
+                Change Location "{{ name }}"
+            {% endblocktrans %}
+        {% else %}
+            {% trans "Add Location" %}
+        {% endif %}
+    </h1>
+    {% crispy form %}
+{% endblock %}
+
+{% comment %}
+{% block js %}
+    <script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/vendor/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/jquery.fileupload.js' %}"></script>
+    <script src="{% static 'site/js/picture_upload.js' %}"></script>
+{% endblock %}
+{% endcomment %}

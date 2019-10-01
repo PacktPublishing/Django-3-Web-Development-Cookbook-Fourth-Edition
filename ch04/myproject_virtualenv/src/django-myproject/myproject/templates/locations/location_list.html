@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n utility_tags %}
+
+{% block main %}
+    <h1>{% trans "Locations" %}</h1>
+    {% if object_list %}
+        {% for location in object_list %}
+            <a href="{{ location.get_url_path }}" class="d-block my-3">
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-text">{{ location.name }}</p>
+                  </div>
+                </div>
+            </a>
+        {% endfor %}
+        {% include "misc/includes/pagination.html" %}
+    {% else %}
+        <p>{% trans "There are no locations yet." %}</p>
+    {% endif %}
+    <a href="{% url 'locations:add_location' %}" class="btn btn-primary">{% trans "Add location" %}</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% load i18n crispy_forms_field static sekizai_tags %}
+
+<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}"
+                                               class="form-group{% if 'form-horizontal' in form_class %} row{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+  {% if field.label and form_show_labels %}
+    <label for="{{ field.id_for_label }}"
+           class="col-form-label {{ label_class }}{% if field.field.required %} requiredField{% endif %}">
+      {{ field.label|safe }}{% if field.field.required %}<span class="asteriskField">*</span>{% endif %}
+    </label>
+  {% endif %}
+
+  <div class="{{ field_class }}">
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>{% trans "Upload File..." %}</span>
+            {% crispy_field field %}
+        </span>
+    {% include 'bootstrap4/layout/help_text_and_errors.html' %}
+    <p class="form-text text-muted">
+      {% trans "Available formats are JPG, GIF, and PNG." %}
+      {% trans "Minimal size is 800 × 800 px." %}
+    </p>
+  </div>
+</{% if tag %}{{ tag }}{% else %}div{% endif %}>
+
+{% addtoblock "css" %}
+<link rel="stylesheet" href="{% static 'site/vendor/jQuery-File-Upload-10.2.0/css/jquery.fileupload-ui.css' %}"/>
+<link rel="stylesheet" href="{% static 'site/vendor/jQuery-File-Upload-10.2.0/css/jquery.fileupload.css' %}"/>
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+<script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'site/vendor/jQuery-File-Upload-10.2.0/js/jquery.fileupload.js' %}"></script>
+<script src="{% static 'site/js/picture_upload.js' %}"></script>
+{% endaddtoblock %}

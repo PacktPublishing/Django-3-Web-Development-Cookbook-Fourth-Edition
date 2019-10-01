@@ -1,0 +1,1 @@
+default_app_config = "myproject.apps.locations.apps.LocationsAppConfig"

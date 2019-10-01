@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+    <a href="{% url "locations:location_list" %}">{% trans "List of locations" %}</a>
+    <h1>
+        {% blocktrans trimmed with name=location.name %}
+            Location "{{ name }}"
+        {% endblocktrans %}
+    </h1>
+    {% if location.picture %}
+        <picture>
+            <source
+                media="(max-width: 480px)"
+                srcset="{{ location.picture_mobile.url }}" />
+            <source
+                media="(max-width: 768px)"
+                srcset="{{ location.picture_tablet.url }}" />
+            <img
+                src="{{ location.picture_desktop.url }}"
+                alt="{{ location.name }}" />
+        </picture>
+    {% endif %}
+    {{ location.translated_content|linebreaks|urlize }}
+    <a href="{% url 'locations:change_location' pk=location.pk %}" class="btn btn-primary">{% trans "Change this location" %}</a>
+    <a href="{% url 'locations:delete_location' pk=location.pk %}" class="btn btn-danger">{% trans "Delete this location" %}</a>
+{% endblock %}
