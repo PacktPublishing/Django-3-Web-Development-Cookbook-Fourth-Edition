@@ -9,7 +9,7 @@ from .models import Location, RATING_CHOICES
 
 class LocationList(ListView):
     model = Location
-
+    paginate_by = 10
 
 class LocationDetail(DetailView):
     model = Location

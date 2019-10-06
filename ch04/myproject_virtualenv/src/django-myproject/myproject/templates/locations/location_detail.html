@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static likes_tags %}
 
 
 {% block content %}
-    <a href="{% url "locations:location_list" %}">{% trans "List of locations" %}</a>
-    <h1>
-        {% blocktrans trimmed with name=location.name %}
-            Location "{{ name }}"
-        {% endblocktrans %}
-    </h1>
+    <a href="{% url "locations:location_list" %}">{% trans "Interesting Locations" %}</a>
+    <div class="float-right">
+        {% if request.user.is_authenticated %}
+            {% like_widget for location %}
+        {% endif %}
+    </div>
+    <h1 class="map-title">{{ location.name }}</h1>
     {% if location.picture %}
-        <picture>
+        <picture class="img-fluid">
             <source
                 media="(max-width: 480px)"
                 srcset="{{ location.picture_mobile.url }}" />
@@ -19,10 +20,28 @@
                 srcset="{{ location.picture_tablet.url }}" />
             <img
                 src="{{ location.picture_desktop.url }}"
-                alt="{{ location.name }}" />
+                alt="{{ location.name }}"
+                class="img-fluid"
+            />
         </picture>
     {% endif %}
-    {{ location.translated_content|linebreaks|urlize }}
-    <a href="{% url 'locations:change_location' pk=location.pk %}" class="btn btn-primary">{% trans "Change this location" %}</a>
-    <a href="{% url 'locations:delete_location' pk=location.pk %}" class="btn btn-danger">{% trans "Delete this location" %}</a>
+    <div class="my-3">
+        {{ location.description|linebreaks|urlize }}
+    </div>
+    {% with geoposition=location.get_geoposition %}
+    <div id="map" class="mb-3"
+         data-latitude="{{ geoposition.latitude|stringformat:"f" }}"
+         data-longitude="{{ geoposition.longitude|stringformat:"f" }}"
+         data-address="{{ location.get_full_address }}"></div>
+    {% endwith %}
+    <p>
+        <a href="{% url 'locations:change_location' pk=location.pk %}" class="btn btn-primary">{% trans "Change this location" %}</a>
+        <a href="{% url 'locations:delete_location' pk=location.pk %}" class="btn btn-danger">{% trans "Delete this location" %}</a>
+    </p>
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static 'site/js/location_detail.js' %}"></script>
+    <script async defer src="https://maps-api-ssl.google.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=Location.init"></script>
 {% endblock %}

@@ -9,17 +9,21 @@
 {% endcomment %}
 
 {% block content %}
-    <a href="{% url "locations:location_list" %}">{% trans "List of locations" %}</a>
-    <h1>
-        {% if location %}
-            {% blocktrans trimmed with name=location.name %}
-                Change Location "{{ name }}"
-            {% endblocktrans %}
-        {% else %}
-            {% trans "Add Location" %}
-        {% endif %}
-    </h1>
-    {% crispy form %}
+    <div class="row">
+        <div class="col-lg-8">
+            <a href="{% url "locations:location_list" %}">{% trans "Interesting Locations" %}</a>
+            <h1>
+                {% if location %}
+                    {% blocktrans trimmed with name=location.name %}
+                        Change Location "{{ name }}"
+                    {% endblocktrans %}
+                {% else %}
+                    {% trans "Add Location" %}
+                {% endif %}
+            </h1>
+            {% crispy form %}
+        </div>
+    </div>
 {% endblock %}
 
 {% comment %}

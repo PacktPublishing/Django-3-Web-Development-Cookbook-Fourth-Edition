@@ -16,14 +16,27 @@ class LocationForm(forms.ModelForm):
     picture_path = forms.CharField(
         max_length=255, widget=forms.HiddenInput(), required=False
     )
-
+    latitude = forms.FloatField(
+        label=_("Latitude"),
+        help_text=_("Latitude (Lat.) is the angle between any point and the equator (north pole is at 90; south pole is at -90)."),
+        required=False,
+    )
+    longitude = forms.FloatField(
+        label=_("Longitude"),
+        help_text=_("Longitude (Long.) is the angle east or west of an arbitrary point on Earth from Greenwich (UK), which is the international zero-longitude point (longitude=0 degrees). The anti-meridian of Greenwich is both 180 (direction to east) and -180 (direction to west)."),
+        required=False,
+    )
     class Meta:
         model = Location
-        fields = "__all__"
+        exclude = ["geoposition", "rating"]
 
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super().__init__(*args, **kwargs)
+        geoposition = self.instance.get_geoposition()
+        if geoposition:
+            self.fields["latitude"].initial = geoposition.latitude
+            self.fields["longitude"].initial = geoposition.longitude
 
         name_field = layout.Field("name", css_class="input-block-level")
         description_field = layout.Field(
@@ -50,6 +63,28 @@ class LocationForm(forms.ModelForm):
             css_id="picture_fieldset",
         )
 
+        street_address_field = layout.Field(
+            "street_address", css_class="input-block-level"
+        )
+        street_address2_field = layout.Field(
+            "street_address2", css_class="input-block-level"
+        )
+        postal_code_field = layout.Field("postal_code", css_class="input-block-level")
+        city_field = layout.Field("city", css_class="input-block-level")
+        country_field = layout.Field("country", css_class="input-block-level")
+        latitude_field = layout.Field("latitude", css_class="input-block-level")
+        longitude_field = layout.Field("longitude", css_class="input-block-level")
+        address_fieldset = layout.Fieldset(
+            _("Address"),
+            street_address_field,
+            street_address2_field,
+            postal_code_field,
+            city_field,
+            country_field,
+            latitude_field,
+            longitude_field,
+        )
+
         submit_button = layout.Submit("save", _("Save"))
         actions = bootstrap.FormActions(layout.Div(submit_button, css_class="col"))
 
@@ -57,7 +92,7 @@ class LocationForm(forms.ModelForm):
         self.helper.form_action = self.request.path
         self.helper.form_method = "POST"
         self.helper.attrs = {"noValidate": "noValidate"}
-        self.helper.layout = layout.Layout(main_fieldset, picture_fieldset, actions)
+        self.helper.layout = layout.Layout(main_fieldset, picture_fieldset, address_fieldset, actions)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -69,14 +104,14 @@ class LocationForm(forms.ModelForm):
         instance = super().save(commit=False)
         picture_path = self.cleaned_data["picture_path"]
         if picture_path:
-            temporary_image_path = os.path.join(
-                "temporary-uploads", picture_path
-            )
+            temporary_image_path = os.path.join("temporary-uploads", picture_path)
             file_obj = default_storage.open(temporary_image_path)
-            instance.picture.save(
-                picture_path, file_obj, save=False
-            )
+            instance.picture.save(picture_path, file_obj, save=False)
             default_storage.delete(temporary_image_path)
+        latitude = self.cleaned_data["latitude"]
+        longitude = self.cleaned_data["longitude"]
+        if latitude is not None and longitude is not None:
+            instance.set_geoposition(longitude=longitude, latitude=latitude)
         if commit:
             instance.save()
             self.save_m2m()

@@ -13,6 +13,7 @@ urlpatterns = i18n_patterns(
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("locations/", include(("myproject.apps.locations.urls", "locations"), namespace="locations")),
+    path("likes/", include(("myproject.apps.likes.urls", "likes"), namespace="likes")),
     path("js-settings/", core_views.js_settings, name="js_settings"),
 )
 

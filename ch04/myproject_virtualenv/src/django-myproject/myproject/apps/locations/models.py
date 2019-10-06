@@ -42,20 +42,18 @@ class Location(CreationModificationDateBase, UrlBase):
         _("Country"), choices=COUNTRY_CHOICES, max_length=255, blank=True
     )
     geoposition = models.PointField(blank=True, null=True)
-    picture = models.ImageField(
-        _("Picture"), upload_to=upload_to
-    )
+    picture = models.ImageField(_("Picture"), upload_to=upload_to)
     picture_desktop = ImageSpecField(
         source="picture",
-        processors=[ResizeToFill(1024, 512)],
+        processors=[ResizeToFill(1200, 600)],
         format="JPEG",
         options={"quality": 100},
     )
     picture_tablet = ImageSpecField(
-        source="picture", processors=[ResizeToFill(800, 400)], format="PNG"
+        source="picture", processors=[ResizeToFill(768, 384)], format="PNG"
     )
     picture_mobile = ImageSpecField(
-        source="picture", processors=[ResizeToFill(728, 250)], format="PNG"
+        source="picture", processors=[ResizeToFill(640, 320)], format="PNG"
     )
     rating = models.PositiveIntegerField(
         _("Rating"), choices=RATING_CHOICES, blank=True, null=True
@@ -81,6 +79,7 @@ class Location(CreationModificationDateBase, UrlBase):
 
     def delete(self, *args, **kwargs):
         from django.core.files.storage import default_storage
+
         if self.picture:
             with contextlib.suppress(FileNotFoundError):
                 default_storage.delete(self.picture_desktop.path)
@@ -89,10 +88,44 @@ class Location(CreationModificationDateBase, UrlBase):
             self.picture.delete()
         super().delete(*args, **kwargs)
 
+    def get_field_value(self, field_name):
+        if isinstance(field_name, str):
+            value = getattr(self, field_name)
+            if callable(value):
+                value = value()
+            return value
+        elif isinstance(field_name, (list, tuple)):
+            field_names = field_name
+            values = []
+            for field_name in field_names:
+                value = self.get_field_value(field_name)
+                if value:
+                    values.append(value)
+            return " ".join(values)
+        return ""
+
+    def get_full_address(self):
+        field_names = [
+            "name",
+            "street_address",
+            "street_address",
+            ("postal_code", "city"),
+            "get_country_display",
+        ]
+        full_address = []
+        for field_name in field_names:
+            value = self.get_field_value(field_name)
+            if value:
+                full_address.append(value)
+        return ", ".join(full_address)
+
+    def get_rating_percentage(self):
+        return self.rating * 20 if self.rating is not None else None
+
     def get_geoposition(self):
         if not self.geoposition:
             return None
         return Geoposition(self.geoposition.coords[0], self.geoposition.coords[1])
 
     def set_geoposition(self, longitude, latitude):
-        self.geoposition = f"SRID=4326;POINT ({longitude} {latitude})"
+        self.geoposition = f"SRID=4326;POINT({longitude} {latitude})"

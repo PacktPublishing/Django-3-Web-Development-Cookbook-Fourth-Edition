@@ -1,21 +1,81 @@
 {% extends "base.html" %}
-{% load i18n utility_tags %}
+{% load i18n static utility_tags %}
 
-{% block main %}
-    <h1>{% trans "Locations" %}</h1>
+{% block css %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'site/css/rating.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8">
+    <h1>{% trans "Interesting Locations" %}</h1>
     {% if object_list %}
-        {% for location in object_list %}
-            <a href="{{ location.get_url_path }}" class="d-block my-3">
-                <div class="card">
-                  <div class="card-body">
-                    <p class="card-text">{{ location.name }}</p>
-                  </div>
-                </div>
-            </a>
-        {% endfor %}
-        {% include "misc/includes/pagination.html" %}
+        <div class="item-list">
+            {% for location in object_list %}
+                <a href="{{ location.get_url_path }}"
+                   data-modal-url="{% url 'locations:location_detail_modal' pk=location.pk %}"
+                   class="item d-block my-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="float-right">
+                                <div class="rating" aria-label="
+                                        {% blocktrans with stars=location.rating %}{{ stars }} of 5 stars{% endblocktrans %}">
+                                    <span style="width:{{ location.get_rating_percentage }}%"></span>
+                                </div>
+                            </div>
+                            <p class="card-text">{{ location.name }}<br/>
+                                <small>{{ location.city }},
+                                    {{ location.get_country_display }}</small>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <p class="pagination">
+                    <a class="next-page"
+                       href="{% modify_query page=page_obj.next_page_number %}">
+                        {% trans "More..." %}</a>
+                </p>
+            {% endif %}
+        </div>
     {% else %}
         <p>{% trans "There are no locations yet." %}</p>
     {% endif %}
     <a href="{% url 'locations:add_location' %}" class="btn btn-primary">{% trans "Add location" %}</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.3.9/jquery.jscroll.min.js"></script>
+    <script src="{% static 'site/js/list.js' %}"></script>
+{% endblock %}
+
+{% block extrabody %}
+    <div id="modal" class="modal fade" tabindex="-1" role="dialog"
+         aria-hidden="true" aria-labelledby="modal_title">
+        <div class="modal-dialog modal-dialog-centered"
+             role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="modal_title"
+                        class="modal-title"></h4>
+                    <button type="button" class="close"
+                            data-dismiss="modal"
+                            aria-label="{% trans 'Close' %}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/template" class="loader">
+        <div class="text-center">
+            <div class="loading-indicator"></div>
+        </div>
+    </script>
 {% endblock %}

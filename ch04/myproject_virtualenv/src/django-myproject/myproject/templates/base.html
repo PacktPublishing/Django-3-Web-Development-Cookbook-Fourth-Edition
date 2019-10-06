@@ -14,9 +14,13 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="{% static 'site/css/style.css' %}"
+          crossorigin="anonymous" />
 
     {% block css %}{% endblock %}
     {% render_block "css" %}
+    {% block extrahead %}{% endblock %}
 </head>
 <body>
     <div class="container my-5">
@@ -40,5 +44,6 @@
     <script src="{% url 'js_settings' %}"></script>
     {% block js %}{% endblock %}
     {% render_block "js" %}
+    {% block extrabody %}{% endblock %}
 </body>
 </html>

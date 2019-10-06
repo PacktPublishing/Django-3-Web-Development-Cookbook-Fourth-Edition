@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.forms",
+    "django.contrib.gis",
     # third-party
     "imagekit",
     "crispy_forms",
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
     # local
     "myproject.apps.core",
     "myproject.apps.locations",
+    "myproject.apps.likes",
 ]
 
 MIDDLEWARE = [
@@ -98,6 +100,7 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "sekizai.context_processors.sekizai",
                 "myproject.apps.core.context_processors.website_url",
+                "myproject.apps.core.context_processors.google_maps",
             ]
         },
     }
@@ -232,3 +235,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "locations:location_list"
 
 PAGE_SIZE = 2
+
+# Register for a Google Maps API KEY according to the docs:
+# https://developers.google.com/maps/documentation/javascript/get-api-key
+GOOGLE_MAPS_API_KEY = get_secret("GOOGLE_MAPS_API_KEY")
