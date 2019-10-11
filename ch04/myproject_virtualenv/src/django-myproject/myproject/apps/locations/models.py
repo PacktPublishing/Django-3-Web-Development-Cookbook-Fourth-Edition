@@ -69,12 +69,9 @@ class Location(CreationModificationDateBase, UrlBase):
     def get_url_path(self):
         return reverse("locations:location_detail", kwargs={"pk": self.pk})
 
-    def set_pk(self):
-        self.pk = uuid.uuid4()
-
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.set_pk()
+            self.pk = uuid.uuid4()
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):

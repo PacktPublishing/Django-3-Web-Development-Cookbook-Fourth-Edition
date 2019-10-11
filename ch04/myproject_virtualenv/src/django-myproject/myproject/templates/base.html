@@ -2,14 +2,12 @@
 {% load i18n static sekizai_tags %}
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>{% block head_title %}{% endblock %}</title>
-    {% block meta_tags %}{% endblock %}
     {% include "misc/includes/favicons.html" %}
+    {% block meta_tags %}{% endblock %}
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -23,6 +21,7 @@
     {% block extrahead %}{% endblock %}
 </head>
 <body>
+    {% include "misc/includes/header.html" %}
     <div class="container my-5">
         {% block content %}
             <div class="row">
@@ -31,8 +30,7 @@
             </div>
         {% endblock %}
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {% include "misc/includes/footer.html" %}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"

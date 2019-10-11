@@ -1,7 +1,5 @@
-from django import forms
+# myproject/apps/locations/admin.py
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
-
 from .models import Location
 
 

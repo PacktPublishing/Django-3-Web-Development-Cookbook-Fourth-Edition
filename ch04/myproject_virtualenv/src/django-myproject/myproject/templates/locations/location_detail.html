@@ -36,7 +36,9 @@
     {% endwith %}
     <p>
         <a href="{% url 'locations:change_location' pk=location.pk %}" class="btn btn-primary">{% trans "Change this location" %}</a>
-        <a href="{% url 'locations:delete_location' pk=location.pk %}" class="btn btn-danger">{% trans "Delete this location" %}</a>
+        {% comment %}
+            <a href="{% url 'locations:delete_location' pk=location.pk %}" class="btn btn-danger">{% trans "Delete this location" %}</a>
+        {% endcomment %}
     </p>
 {% endblock %}
 

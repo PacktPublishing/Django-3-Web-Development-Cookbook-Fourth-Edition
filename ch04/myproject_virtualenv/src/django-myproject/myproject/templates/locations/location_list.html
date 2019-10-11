@@ -25,7 +25,7 @@
                                     <span style="width:{{ location.get_rating_percentage }}%"></span>
                                 </div>
                             </div>
-                            <p class="card-text">{{ location.name }}<br/>
+                            <p class="card-text">{{ location.name }},<br/>
                                 <small>{{ location.city }},
                                     {{ location.get_country_display }}</small>
                             </p>
@@ -44,7 +44,10 @@
     {% else %}
         <p>{% trans "There are no locations yet." %}</p>
     {% endif %}
-    <a href="{% url 'locations:add_location' %}" class="btn btn-primary">{% trans "Add location" %}</a>
+        </div>
+        <div class="col-lg-4">
+            <a href="{% url 'locations:add_location' %}" class="btn btn-primary float-right">{% trans "Add location" %}</a>
+
         </div>
     </div>
 {% endblock %}
