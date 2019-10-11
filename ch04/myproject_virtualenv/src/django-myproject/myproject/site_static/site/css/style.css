@@ -10,6 +10,11 @@
     }
 }
 
+.loading-indicator {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+}
 .loading-indicator:after {
   content: "";
   display: block;

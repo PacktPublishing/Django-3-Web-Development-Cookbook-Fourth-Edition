@@ -18,7 +18,7 @@
 
     {% block css %}{% endblock %}
     {% render_block "css" %}
-    {% block extrahead %}{% endblock %}
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     {% include "misc/includes/header.html" %}
@@ -42,6 +42,6 @@
     <script src="{% url 'js_settings' %}"></script>
     {% block js %}{% endblock %}
     {% render_block "js" %}
-    {% block extrabody %}{% endblock %}
+    {% block extra_body %}{% endblock %}
 </body>
 </html>
