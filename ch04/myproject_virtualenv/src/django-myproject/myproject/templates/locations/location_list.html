@@ -14,6 +14,7 @@
                 <div class="item-list">
                     {% for location in object_list %}
                         <a href="{{ location.get_url_path }}"
+                           data-modal-title="{{ location.get_full_address }}"
                            data-modal-url="{% url 'locations:location_detail_modal' pk=location.pk %}"
                            class="item d-block my-3">
                             <div class="card">
@@ -23,7 +24,7 @@
                                             <span style="width:{{ location.get_rating_percentage }}%"></span>
                                         </div>
                                     </div>
-                                    <p class="card-text">{{ location.name }},<br/>
+                                    <p class="card-text">{{ location.name }}<br/>
                                         <small>{{ location.city }},
                                             {{ location.get_country_display }}</small>
                                     </p>
@@ -31,9 +32,9 @@
                             </div>
                         </a>
                     {% endfor %}
-                    <div class="text-center">
-                        <div class="loading-indicator"></div>
-                    </div>
+                        <div class="text-center">
+                            <div class="loading-indicator"></div>
+                        </div>
                     {% if False and page_obj.has_next %}
                         <div class="text-center">
                             <div class="loading-indicator"></div>
@@ -52,11 +53,6 @@
         <div class="col-lg-4">
             {% include "locations/includes/navigation.html" %}
         </div>
-        {% comment %}
-        <div class="col-lg-4">
-            <a href="{% url 'locations:add_location' %}" class="btn btn-primary float-right">{% trans "Add location" %}</a>
-        </div>
-        {% endcomment %}
     </div>
 {% endblock %}
 

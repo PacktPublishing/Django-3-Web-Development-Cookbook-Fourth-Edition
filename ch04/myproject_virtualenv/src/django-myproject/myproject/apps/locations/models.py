@@ -125,4 +125,5 @@ class Location(CreationModificationDateBase, UrlBase):
         return Geoposition(self.geoposition.coords[0], self.geoposition.coords[1])
 
     def set_geoposition(self, longitude, latitude):
-        self.geoposition = f"SRID=4326;POINT({longitude} {latitude})"
+        from django.contrib.gis.geos import Point
+        self.geoposition = Point(longitude, latitude, srid=4326)

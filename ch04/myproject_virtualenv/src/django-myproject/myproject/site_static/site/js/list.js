@@ -22,7 +22,7 @@ jQuery(function ($) {
         var url = $link.data('modal-url');
         if (url) {
             event.preventDefault();
-            $('.modal-title', $modal).text($link.text());
+            $('.modal-title', $modal).text($link.data('modal-title'));
             $('.modal-body', $modal).load(url, function () {
                 $modal.on('shown.bs.modal', function () {
                     // do something when dialog is shown
