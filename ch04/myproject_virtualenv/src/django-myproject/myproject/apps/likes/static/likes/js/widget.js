@@ -1,9 +1,4 @@
 (function($) {
-    var star = {
-        add: '<span class="glyphicon glyphicon-star"></span>',
-        remove: '<span class="glyphicon glyphicon-star-empty"></span>'
-    };
-
     $(document).on("click", ".like-button", function() {
         var $button = $(this);
         var $widget = $button.closest(".like-widget");
@@ -14,9 +9,8 @@
                 var action = data.action; // "add" or "remove"
                 var label = $button.data(action + "-label");
 
-
                 $button[action + "Class"]("active");
-                $button.html(star[action] + " " + label);
+                $button.html(label);
 
                 $badge.html(data.count);
             }

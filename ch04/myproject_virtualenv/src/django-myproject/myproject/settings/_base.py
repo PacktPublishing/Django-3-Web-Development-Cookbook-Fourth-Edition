@@ -234,8 +234,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "locations:location_list"
 
-PAGE_SIZE = 2
-
 # Register for a Google Maps API KEY according to the docs:
 # https://developers.google.com/maps/documentation/javascript/get-api-key
 GOOGLE_MAPS_API_KEY = get_secret("GOOGLE_MAPS_API_KEY")

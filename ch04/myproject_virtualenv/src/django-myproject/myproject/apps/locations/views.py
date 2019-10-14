@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from django.conf import settings
 
 from .forms import LocationForm
-from .models import Location, RATING_CHOICES
+from .models import Location
 
 
 class LocationList(ListView):
@@ -41,6 +40,3 @@ def delete_location(request, pk):
         return redirect("locations:location_list")
     context = {"location": location}
     return render(request, "locations/location_deleting_confirmation.html", context)
-
-
-PAGE_SIZE = getattr(settings, "PAGE_SIZE", 24)

@@ -6,10 +6,8 @@
             data-remove-label="{% trans "Like" %}"
             data-add-label="{% trans "Unlike" %}">
         {% if object|liked_by:request.user %}
-            <span class="glyphicon glyphicon-star"></span>
             {% trans "Unlike" %}
         {% else %}
-            <span class="glyphicon glyphicon-star-empty"></span>
             {% trans "Like" %}
         {% endif %}
     </button>

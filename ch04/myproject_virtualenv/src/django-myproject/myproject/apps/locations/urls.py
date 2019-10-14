@@ -11,6 +11,6 @@ urlpatterns = [
         LocationDetail.as_view(template_name="locations/location_detail_modal.html"),
         name="location_detail_modal",
     ),
-    path("<uuid:pk>/change/", add_or_change_location, name="change_location"),
+    path("<uuid:pk>/change/", add_or_change_location, name="add_or_change_location"),
     path("<uuid:pk>/delete/", delete_location, name="delete_location"),
 ]

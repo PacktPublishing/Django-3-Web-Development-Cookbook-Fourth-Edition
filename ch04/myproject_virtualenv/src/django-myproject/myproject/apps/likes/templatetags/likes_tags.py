@@ -7,6 +7,9 @@ from ..models import Like
 register = template.Library()
 
 
+# TAGS
+
+
 class ObjectLikeWidget(template.Node):
     def __init__(self, var):
         self.var = var
@@ -25,9 +28,6 @@ class ObjectLikeWidget(template.Node):
         return output
 
 
-# TAGS
-
-
 @register.tag
 def like_widget(parser, token):
     try:
@@ -41,9 +41,7 @@ def like_widget(parser, token):
     var = template.Variable(var_name)
     return ObjectLikeWidget(var)
 
-
 # FILTERS
-
 
 @register.filter
 def liked_by(obj, user):

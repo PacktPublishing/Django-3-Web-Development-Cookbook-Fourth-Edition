@@ -70,8 +70,6 @@ def upload_file(request):
                     "deleteUrl": (
                         reverse("delete_file") + f"?filename={file.filename}"
                     ),
-                    # "thumbnailUrl": file.url,
-                    # "type": file.content_type,
                     "path": file.name[len(absolute_uploads_dir) + 1 :],
                 }
             )

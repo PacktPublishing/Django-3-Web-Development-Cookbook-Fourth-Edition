@@ -44,9 +44,6 @@ class LocationForm(forms.ModelForm):
         )
         main_fieldset = layout.Fieldset(_("Main data"), name_field, description_field)
 
-        picture_preview_html = layout.HTML(
-            """{% include "core/includes/picture_preview.html" %}"""
-        )
         picture_field = layout.Field(
             "picture",
             data_url=reverse("upload_file"),
@@ -56,7 +53,6 @@ class LocationForm(forms.ModelForm):
 
         picture_fieldset = layout.Fieldset(
             _("Picture"),
-            picture_preview_html,
             picture_field,
             picture_path_field,
             title=_("Picture upload"),

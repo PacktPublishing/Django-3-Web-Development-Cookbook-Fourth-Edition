@@ -20,9 +20,10 @@ jQuery(function ($) {
     $list.on('click', 'a.item', function (event) {
         var $link = $(this);
         var url = $link.data('modal-url');
-        if (url) {
+        var title = $link.data('modal-title');
+        if (url && title) {
             event.preventDefault();
-            $('.modal-title', $modal).text($link.data('modal-title'));
+            $('.modal-title', $modal).text(title);
             $('.modal-body', $modal).load(url, function () {
                 $modal.on('shown.bs.modal', function () {
                     // do something when dialog is shown

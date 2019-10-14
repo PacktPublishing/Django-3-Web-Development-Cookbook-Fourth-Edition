@@ -35,9 +35,3 @@
 .rating span:after {
   content: "★★★★★";
 }
-
-.loading-indicator {
-  display: inline-block;
-  width: 45px;
-  height: 45px;
-}

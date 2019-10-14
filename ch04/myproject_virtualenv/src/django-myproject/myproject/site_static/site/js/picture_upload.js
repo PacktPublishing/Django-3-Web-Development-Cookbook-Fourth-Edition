@@ -14,14 +14,14 @@ $(function() {
   $("#id_picture").fileupload({
     dataType: "json",
     add: function(e, data) {
-      $("#progress").css("visibility", "visible"); // show the progress bar
-      data.submit(); // start uploading immediately
+      $("#progress").css("visibility", "visible");
+      data.submit();
     },
     progressall: function(e, data) {
       var progress = parseInt((data.loaded / data.total) * 100, 10);
       $("#progress .progress-bar")
         .attr("aria-valuenow", progress)
-        .css("width", progress + "%"); // show upload progress
+        .css("width", progress + "%");
     },
     done: function(e, data) {
       $.each(data.result.files, function(index, file) {
@@ -34,7 +34,7 @@ $(function() {
         );
         $("#id_picture_path").val(file.name);
       });
-      $("#progress").css("visibility", "hidden"); // hide progress bar
+      $("#progress").css("visibility", "hidden");
     }
   });
 });

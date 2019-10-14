@@ -1,5 +1,6 @@
 {% load i18n crispy_forms_field static sekizai_tags %}
 
+{% include "core/includes/picture_preview.html" %}
 <{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}"
                                                class="form-group{% if 'form-horizontal' in form_class %} row{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
   {% if field.label and form_show_labels %}
@@ -10,11 +11,10 @@
   {% endif %}
 
   <div class="{{ field_class }}">
-        <span class="btn btn-success fileinput-button">
-            <i class="glyphicon glyphicon-plus"></i>
-            <span>{% trans "Upload File..." %}</span>
-            {% crispy_field field %}
-        </span>
+    <span class="btn btn-success fileinput-button">
+        <span>{% trans "Upload File..." %}</span>
+        {% crispy_field field %}
+    </span>
     {% include 'bootstrap4/layout/help_text_and_errors.html' %}
     <p class="form-text text-muted">
       {% trans "Available formats are JPG, GIF, and PNG." %}
