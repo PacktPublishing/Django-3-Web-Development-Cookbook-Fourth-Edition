@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     # local
     "myproject.apps.core",
     "myproject.apps.example",
+    "myproject.apps.news",
 ]
 
 MIDDLEWARE = [

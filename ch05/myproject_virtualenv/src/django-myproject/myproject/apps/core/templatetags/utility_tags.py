@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 register = template.Library()
 
 
-"""TAGS"""
+""" TAGS """
 
 
 class IncludeNode(template.Node):
@@ -37,7 +37,7 @@ class IncludeNode(template.Node):
 @register.tag
 def try_to_include(parser, token):
     """
-    Usage: {% try_to_include "sometemplate.html" %}
+    Usage: {% try_to_include "some_template.html" %}
 
     This will fail silently if the template doesn't exist.
     If it does exist, it will be rendered with the current context.
@@ -245,7 +245,7 @@ def remove_from_query(context, *args, **kwargs):
     return construct_query_string(context, query_params)
 
 
-"""FILTERS"""
+""" FILTERS """
 
 DAYS_PER_YEAR = 365
 DAYS_PER_MONTH = 30
@@ -317,6 +317,6 @@ def humanize_url(url, letter_count):
     re_end = re.compile(r"/$")
     url = re_end.sub("", re_start.sub("", url))
     if len(url) > letter_count:
-        url = f"{url[:letter_count - 1]}..."
+        url = f"{url[:letter_count - 1]}…"
     return url
 

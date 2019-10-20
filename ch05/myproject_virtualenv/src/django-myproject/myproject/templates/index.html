@@ -14,7 +14,7 @@
     <div>{{ object.content|first_media }}</div>
 
     <h2>The humanize_url Filter</h2>
-    <p><a href="{{ object.website }}">{{ object.website|humanize_url:30 }}</a></p>
+    <p><a href="{{ object.website }}">{{ object.website|humanize_url:40 }}</a></p>
 
     <h2>The try_to_include Template Tag</h2>
     {% with included_template="misc/includes/example.html" %}
@@ -23,20 +23,20 @@
     {% try_to_include "doesnotexist.html" %}
 
     <h2>The load_objects Template Tag</h2>
-    {% load_objects all from contenttypes.ContentType as contenttypes %}
-    <p>Count: {{ contenttypes.count }}</p>
+    {% load_objects all from news.Article as all_articles %}
+    <p>Count: {{ all_articles.count }}</p>
     <ul>
-    {% for ct in contenttypes %}
-        <li>{{ ct }}</li>
+    {% for article in all_articles %}
+        <li><a href="{{ article.get_url_path }}">{{ article.title }}</a></li>
     {% endfor %}
     </ul>
-    {% load_objects doesnotexist from contenttypes.ContentType limit 5 as contenttypes %}
+    {% load_objects custom_manager.random_published from news.Article limit 1 as random_published_articles %}
+    <p>Count: {{ random_published_articles.count }}</p>
     <ul>
-    {% for ct in contenttypes %}
-        <li>{{ ct }}</li>
+    {% for article in random_published_articles %}
+        <li><a href="{{ article.get_url_path }}">{{ article.title }}</a></li>
     {% endfor %}
     </ul>
-    <p>Count: {{ contenttypes.count }}</p>
 
     <h2>The parse Template Tag</h2>
     {% parse "{{ STATIC_URL }}site/css/" as css_url %}
