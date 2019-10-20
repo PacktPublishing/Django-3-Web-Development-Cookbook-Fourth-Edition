@@ -214,9 +214,7 @@ def add_to_query(context, *params_to_remove, **params_to_add):
     """Renders a link with modified current query parameters"""
     query_params = []
     # go through current query params..
-    get_data = context["request"].GET
-    for key, last_value in get_data.items():
-        value_list = get_data.getlist(key)
+    for key, value_list in context["request"].GET.lists():
         if key not in params_to_remove:
             # don't add key-value pairs which already
             # exist in the query
@@ -236,9 +234,7 @@ def remove_from_query(context, *args, **kwargs):
     """Renders a link with modified current query parameters"""
     query_params = []
     # go through current query params..
-    get_data = context["request"].GET
-    for key, last_value in get_data.items():
-        value_list = get_data.getlist(key)
+    for key, value_list in context["request"].GET.lists():
         # skip keys mentioned in the args
         if key not in args:
             for value in value_list:
