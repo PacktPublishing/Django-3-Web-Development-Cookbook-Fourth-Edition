@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load i18n utility_tags %}
+
+{% block content %}
+    <h1>{% trans "Custom Template Filters and Tags" %}</h1>
+
+    <h2>The date_since Filter</h2>
+    {% if request.user.is_authenticated %}
+        <p>{% trans "You joined:" %} {{ request.user.date_joined|date_since }}</p>
+    {% endif %}
+    <p>{% trans "Object created:" %} {{ object.created|date_since }}</p>
+
+    <h2>The get_first_media Filter</h2>
+    <div>{{ object.content|first_media }}</div>
+
+    <h2>The humanize_url Filter</h2>
+    <p><a href="{{ object.website }}">{{ object.website|humanize_url:30 }}</a></p>
+
+    <h2>The try_to_include Template Tag</h2>
+    {% with included_template="misc/includes/example.html" %}
+        {% try_to_include included_template %}
+    {% endwith %}
+    {% try_to_include "doesnotexist.html" %}
+
+    <h2>The load_objects Template Tag</h2>
+    {% load_objects all from contenttypes.ContentType as contenttypes %}
+    <p>Count: {{ contenttypes.count }}</p>
+    <ul>
+    {% for ct in contenttypes %}
+        <li>{{ ct }}</li>
+    {% endfor %}
+    </ul>
+    {% load_objects doesnotexist from contenttypes.ContentType limit 5 as contenttypes %}
+    <ul>
+    {% for ct in contenttypes %}
+        <li>{{ ct }}</li>
+    {% endfor %}
+    </ul>
+    <p>Count: {{ contenttypes.count }}</p>
+
+    <h2>The parse Template Tag</h2>
+    {% parse "{{ STATIC_URL }}site/css/" as css_url %}
+    <p>{{ css_url }}</p>
+
+    <div>{% parse object.content_to_parse %}</div>
+
+    <h2>The modify_query Template Tag</h2>
+    <ul>
+        <li><a href="{% modify_query a=1 %}">a=1</a></li>
+        <li><a href="{% modify_query b="ok" %}">b="ok"</a></li>
+        <li><a href="{% modify_query "a" %}">reset a</a></li>
+        <li><a href="{% modify_query "a" b=5 c="ok" %}">reset a and b=5 and c="ok"</a></li>
+    </ul>
+
+    <h2>The add_to_query Template Tag</h2>
+    <ul>
+        <li><a href="{% add_to_query a=2 %}">a=2</a></li>
+        <li><a href="{% add_to_query a=3 %}">a=3</a></li>
+        <li><a href="{% add_to_query a=4 %}">a=4</a></li>
+    </ul>
+
+    <h2>The remove_from_query Template Tag</h2>
+    <ul>
+        <li><a href="{% remove_from_query a=2 %}">a=2</a></li>
+        <li><a href="{% remove_from_query "a" %}">any a</a></li>
+    </ul>
+{% endblock %}
