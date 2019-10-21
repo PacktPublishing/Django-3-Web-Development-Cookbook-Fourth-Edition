@@ -1,1 +1,5 @@
 <p>I am included.</p>
+{% load static utility_tags %}
+{% get_static_prefix as STATIC_URL %}
+{% parse "{{ STATIC_URL }}site/img/" as image_directory %}
+<img src="{{ image_directory }}logo.svg" alt="Logo" />
