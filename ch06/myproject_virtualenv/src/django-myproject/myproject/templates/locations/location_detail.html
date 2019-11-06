@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load likes_tags static thumbnail %}
+{% get_media_prefix as MEDIA_URL %}
+
+{% block extrahead %}
+    <script src="{% static 'site/js/lib/picturefill.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <h2 class="map-title">{{ location.title }}</h2>
+    {% if request.user.is_authenticated %}
+        {% like_widget for location %}
+    {% endif %}
+    {% if location.image %}
+        <picture>
+            {% thumbnail location.image "480" as mobile_image %}
+                <source media="(max-width: 480px)"
+                        srcset="{{ mobile_image.url }}">
+            {% endthumbnail %}
+            {% thumbnail location.image "768" as tablet_image_sm %}
+                <source media="(max-width: 768px)"
+                        srcset="{{ tablet_image_sm.url }}">
+            {% endthumbnail %}
+            {% thumbnail location.image "1024" as tablet_image_lg %}
+                <source media="(max-width: 1024px)"
+                        srcset="{{ tablet_image_lg.url }}">
+            {% endthumbnail %}
+            <img src="{{ MEDIA_URL }}{{ location.image.url }}"
+                 alt="{{ location.title }} image">
+        </picture>
+    {% endif %}
+    <p>{{ location.description }}</p>
+    <div id="map"
+         data-lat="{{ location.latitude|stringformat:"f" }}"
+         data-lng="{{ location.longitude|stringformat:"f" }}"
+         data-address="{{ location.address }}"></div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'likes/js/widget.js' %}"></script>
+    <script src="{% static 'site/js/location_detail.js' %}"></script>
+    <script async defer
+            src="https://maps-api-ssl.google.com/maps/api/js?key={{ MAPS_API_KEY }}&callback=Location.init"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="form-row map">
+    <div class="canvas">
+        <!-- THE GMAPS WILL BE INSERTED HERE DYNAMICALLY -->
+    </div>
+    <ul class="locations"></ul>
+    <div class="btn-group">
+        <button type="button"
+                class="btn btn-default locate-address">
+            {% trans "Locate address" %}
+        </button>
+        <button type="button"
+                class="btn btn-default remove-geo">
+            {% trans "Remove from map" %}
+        </button>
+    </div>
+</div>
+<script src="https://maps-api-ssl.google.com/maps/api/js?key={{ MAPS_API_KEY }}"></script>
