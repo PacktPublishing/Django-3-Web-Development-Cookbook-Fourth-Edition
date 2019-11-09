@@ -9,7 +9,6 @@ urlpatterns = i18n_patterns(
     path("", include("social_django.urls", namespace="social")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("products/", include("myproject.apps.products.urls")),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

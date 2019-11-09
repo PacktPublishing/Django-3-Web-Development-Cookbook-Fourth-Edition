@@ -1,3 +1,4 @@
+# myproject/apps/products/models.py
 import os
 
 from django.urls import reverse, NoReverseMatch
