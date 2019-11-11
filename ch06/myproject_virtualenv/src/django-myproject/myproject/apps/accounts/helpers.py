@@ -1,6 +1,3 @@
-# -*- coding: UTF-8 -*-
-from __future__ import unicode_literals
-
 
 def download_avatar(user_id, image_url):
     import tempfile

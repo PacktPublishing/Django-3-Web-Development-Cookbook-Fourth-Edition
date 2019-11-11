@@ -32,13 +32,33 @@ class LocationModelForm(forms.ModelForm):
         model = Location
         exclude = ["geoposition"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance:
+            geoposition = self.instance.get_geoposition()
+            if geoposition:
+                self.fields["latitude"].initial = geoposition.latitude
+                self.fields["longitude"].initial = geoposition.longitude
+
+    def save(self, commit=True):
+        cleaned_data = self.cleaned_data
+        instance = super().save(commit=False)
+        instance.set_geoposition(
+            longitude=cleaned_data["longitude"],
+            latitude=cleaned_data["latitude"],
+        )
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     form = LocationModelForm
     save_on_top = True
-    list_display = ("title", "street_address", "description")
-    search_fields = ("title", "street_address", "description")
+    list_display = ("name", "street_address", "description")
+    search_fields = ("name", "street_address", "description")
 
     def get_fieldsets(self, request, obj=None):
         map_html = render_to_string(
@@ -46,7 +66,7 @@ class LocationAdmin(admin.ModelAdmin):
             {"MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY},
         )
         fieldsets = [
-            (_("Main Data"), {"fields": ("title", "description")}),
+            (_("Main Data"), {"fields": ("name", "description")}),
             (
                 _("Address"),
                 {
@@ -63,5 +83,6 @@ class LocationAdmin(admin.ModelAdmin):
             ),
             (_("Map"), {"description": map_html, "fields": []}),
             (_("Image"), {"fields": ("picture",)}),
+            (_("Rating"), {"fields": ("rating",)}),
         ]
         return fieldsets

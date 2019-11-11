@@ -41,8 +41,8 @@
 
     function updateLatitudeAndLongitude(lat, lng) {
         var precision = 1000000;
-        $lat.val(Math.round(lng * precision) / precision);
-        $lng.val(Math.round(lat * precision) / precision);
+        $lat.val(Math.round(lat * precision) / precision);
+        $lng.val(Math.round(lng * precision) / precision);
     }
 
     function autocompleteAddress(results) {
@@ -75,6 +75,7 @@
                      $foundLocations.hide();
                  })
                  .appendTo($item.clone().appendTo($foundLocations));
+            $foundLocations.show();
         } else {
             $foundLocations.hide();
         }
@@ -119,16 +120,16 @@
     $(function(){
         $map = $(".map");
 
-        $foundLocations = $map.find("ul.locations").hide();
+        $foundLocations = $map.find("ul.js_locations").hide();
         $lat = $("#id_latitude");
         $lng = $("#id_longitude");
-        $street = $("#id_street");
-        $street2 = $("#id_street2");
+        $street = $("#id_street_address");
+        $street2 = $("#id_street_address2");
         $city = $("#id_city");
         $country = $("#id_country");
         $postalCode = $("#id_postal_code");
 
-        $map.find("button.locate-address")
+        $map.find("button.js_locate_address")
             .click(function(event) {
                 var oGeocoder = new google.maps.Geocoder();
                 oGeocoder.geocode(
@@ -143,7 +144,7 @@
                 );
             });
 
-        $map.find("button.remove-geo")
+        $map.find("button.js_remove_geo")
             .click(function() {
                 $lat.val("");
                 $lng.val("");

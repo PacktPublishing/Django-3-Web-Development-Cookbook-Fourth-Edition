@@ -1,16 +1,16 @@
 {% load i18n %}
-<div class="form-row map">
+<div class="form-row map js_map">
     <div class="canvas">
         <!-- THE GMAPS WILL BE INSERTED HERE DYNAMICALLY -->
     </div>
-    <ul class="locations"></ul>
+    <ul class="locations js_locations"></ul>
     <div class="btn-group">
         <button type="button"
-                class="btn btn-default locate-address">
+                class="btn btn-default locate-address js_locate_address">
             {% trans "Locate address" %}
         </button>
         <button type="button"
-                class="btn btn-default remove-geo">
+                class="btn btn-default remove-geo js_remove_geo">
             {% trans "Remove from map" %}
         </button>
     </div>

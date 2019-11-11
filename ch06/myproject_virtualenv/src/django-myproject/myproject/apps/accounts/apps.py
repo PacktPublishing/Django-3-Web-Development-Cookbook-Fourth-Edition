@@ -11,5 +11,5 @@ class AccountsConfig(AppConfig):
 
 
 class SocialDjangoConfig(AppConfig):
-    name = 'social_django'
-    verbose_name = _('Social Authentication')
+    name = "social_django"
+    verbose_name = _("Social Authentication")

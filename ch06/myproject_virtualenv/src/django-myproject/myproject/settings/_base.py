@@ -182,6 +182,37 @@ LANGUAGES = [
     ("sv", "Swedish"),
 ]
 
+COUNTRY_CHOICES = [
+    ("BE", _("Belgium")),
+    ("BG", _("Bulgaria")),
+    ("CZ", _("Czechia")),
+    ("DK", _("Denmark")),
+    ("DE", _("Germany")),
+    ("EE", _("Estonia")),
+    ("IE", _("Ireland")),
+    ("EL", _("Greece")),
+    ("ES", _("Spain")),
+    ("FR", _("France")),
+    ("HR", _("Croatia")),
+    ("IT", _("Italy")),
+    ("CY", _("Cyprus")),
+    ("LV", _("Latvia")),
+    ("LT", _("Lithuania")),
+    ("LU", _("Luxembourg")),
+    ("HU", _("Hungary")),
+    ("MT", _("Malta")),
+    ("NL", _("Netherlands")),
+    ("AT", _("Austria")),
+    ("PL", _("Poland")),
+    ("PT", _("Portugal")),
+    ("RO", _("Romania")),
+    ("SI", _("Slovenia")),
+    ("SK", _("Slovakia")),
+    ("FI", _("Finland")),
+    ("SE", _("Sweden")),
+    ("UK", _("United Kingdom")),
+]
+
 LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 
 # Static files (CSS, JavaScript, Images)
@@ -208,3 +239,7 @@ SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+# Google Maps API
+
+GOOGLE_MAPS_API_KEY = get_secret("GOOGLE_MAPS_API_KEY")
