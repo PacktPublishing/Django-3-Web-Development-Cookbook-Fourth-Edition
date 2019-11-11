@@ -1,10 +1,6 @@
-import contextlib
 import os
 import uuid
 from collections import namedtuple
-
-from imagekit.models import ImageSpecField
-from pilkit.processors import ResizeToFill
 
 from django.contrib.gis.db import models
 from django.urls import reverse
@@ -13,8 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now as timezone_now
 
 from myproject.apps.core.models import CreationModificationDateBase, UrlBase
-
-RATING_CHOICES = ((1, "★☆☆☆☆"), (2, "★★☆☆☆"), (3, "★★★☆☆"), (4, "★★★★☆"), (5, "★★★★★"))
 
 COUNTRY_CHOICES = getattr(settings, "COUNTRY_CHOICES", [])
 
@@ -43,21 +37,6 @@ class Location(CreationModificationDateBase, UrlBase):
     )
     geoposition = models.PointField(blank=True, null=True)
     picture = models.ImageField(_("Picture"), upload_to=upload_to)
-    picture_desktop = ImageSpecField(
-        source="picture",
-        processors=[ResizeToFill(1200, 600)],
-        format="JPEG",
-        options={"quality": 100},
-    )
-    picture_tablet = ImageSpecField(
-        source="picture", processors=[ResizeToFill(768, 384)], format="PNG"
-    )
-    picture_mobile = ImageSpecField(
-        source="picture", processors=[ResizeToFill(640, 320)], format="PNG"
-    )
-    rating = models.PositiveIntegerField(
-        _("Rating"), choices=RATING_CHOICES, blank=True, null=True
-    )
 
     class Meta:
         verbose_name = _("Location")
@@ -78,10 +57,6 @@ class Location(CreationModificationDateBase, UrlBase):
         from django.core.files.storage import default_storage
 
         if self.picture:
-            with contextlib.suppress(FileNotFoundError):
-                default_storage.delete(self.picture_desktop.path)
-                default_storage.delete(self.picture_tablet.path)
-                default_storage.delete(self.picture_mobile.path)
             self.picture.delete()
         super().delete(*args, **kwargs)
 
@@ -115,9 +90,6 @@ class Location(CreationModificationDateBase, UrlBase):
             if value:
                 full_address.append(value)
         return ", ".join(full_address)
-
-    def get_rating_percentage(self):
-        return self.rating * 20 if self.rating is not None else None
 
     def get_geoposition(self):
         if not self.geoposition:

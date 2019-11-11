@@ -83,6 +83,5 @@ class LocationAdmin(admin.ModelAdmin):
             ),
             (_("Map"), {"description": map_html, "fields": []}),
             (_("Image"), {"fields": ("picture",)}),
-            (_("Rating"), {"fields": ("rating",)}),
         ]
         return fieldsets
