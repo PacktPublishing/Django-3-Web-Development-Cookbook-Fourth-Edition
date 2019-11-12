@@ -131,8 +131,8 @@
 
         $map.find("button.js_locate_address")
             .click(function(event) {
-                var oGeocoder = new google.maps.Geocoder();
-                oGeocoder.geocode(
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode(
                     {address: getAddress4search()},
                     function (results, status) {
                         if (status === google.maps.GeocoderStatus.OK) {

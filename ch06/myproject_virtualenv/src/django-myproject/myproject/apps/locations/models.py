@@ -54,42 +54,9 @@ class Location(CreationModificationDateBase, UrlBase):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        from django.core.files.storage import default_storage
-
         if self.picture:
             self.picture.delete()
         super().delete(*args, **kwargs)
-
-    def get_field_value(self, field_name):
-        if isinstance(field_name, str):
-            value = getattr(self, field_name)
-            if callable(value):
-                value = value()
-            return value
-        elif isinstance(field_name, (list, tuple)):
-            field_names = field_name
-            values = []
-            for field_name in field_names:
-                value = self.get_field_value(field_name)
-                if value:
-                    values.append(value)
-            return " ".join(values)
-        return ""
-
-    def get_full_address(self):
-        field_names = [
-            "name",
-            "street_address",
-            "street_address",
-            ("postal_code", "city"),
-            "get_country_display",
-        ]
-        full_address = []
-        for field_name in field_names:
-            value = self.get_field_value(field_name)
-            if value:
-                full_address.append(value)
-        return ", ".join(full_address)
 
     def get_geoposition(self):
         if not self.geoposition:
