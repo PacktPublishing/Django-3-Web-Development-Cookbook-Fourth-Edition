@@ -10,7 +10,7 @@
 </style>
 <script nonce="{{ request.csp_nonce }}">
 django.jQuery(function($) {
-    $('.js-download-gravatar').on('click', function(e) {
+    $('.js_download_gravatar').on('click', function(e) {
         e.preventDefault();
         $.ajax({
             url: $(this).data('url'),
