@@ -1,12 +1,11 @@
 # myproject/apps/products/admin.py
 from copy import copy
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, NamedStyle, builtins
+from openpyxl.styles import Alignment, NamedStyle
 from openpyxl.styles.numbers import FORMAT_NUMBER
 from openpyxl.writer.excel import save_virtual_workbook
 
 from django.contrib import admin
-from django.db import models
 from django.http.response import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import mark_safe
@@ -14,6 +13,22 @@ from django.utils.translation import ugettext_lazy as _
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
 from .models import Product, ProductPhoto
+
+
+class ColumnConfig:
+    def __init__(
+            self,
+            heading,
+            width=None,
+            heading_style="Headline 1",
+            style="Normal Wrapped",
+            number_format=None,
+    ):
+        self.heading = heading
+        self.width = width
+        self.heading_style = heading_style
+        self.style = style
+        self.number_format = number_format
 
 
 def export_xlsx(modeladmin, request, queryset):
@@ -31,27 +46,12 @@ def export_xlsx(modeladmin, request, queryset):
         NamedStyle("Normal Wrapped", alignment=Alignment(wrap_text=True))
     )
 
-    class Config:
-        def __init__(
-            self,
-            heading,
-            width=None,
-            heading_style="Headline 1",
-            style="Normal Wrapped",
-            number_format=None,
-        ):
-            self.heading = heading
-            self.width = width
-            self.heading_style = heading_style
-            self.style = style
-            self.number_format = number_format
-
     column_config = {
-        "A": Config("ID", width=10, style="Identifier"),
-        "B": Config("Title", width=30),
-        "C": Config("Description", width=60),
-        "D": Config("Price", width=15, style="Currency", number_format="#,##0.00 €"),
-        "E": Config("Preview", width=100, style="Hyperlink"),
+        "A": ColumnConfig("ID", width=10, style="Identifier"),
+        "B": ColumnConfig("Title", width=30),
+        "C": ColumnConfig("Description", width=60),
+        "D": ColumnConfig("Price", width=15, style="Currency", number_format="#,##0.00 €"),
+        "E": ColumnConfig("Preview", width=100, style="Hyperlink"),
     }
 
     # Set up column widths, header values and styles
