@@ -125,8 +125,9 @@ dmypy.json
 .pyre/
 
 # Media and Static directories
-/src/myproject/media/
-!/src/myproject/media/.gitkeep
+**/src/myproject/media/
+!**/src/myproject/media/.gitkeep
+!**/src/myproject/media/ideas/.htaccess
 
 /src/myproject/static/
 !/src/myproject/static/.gitkeep

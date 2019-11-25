@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <div class="logged-in-box auth0-box logged-in">
+        <img alt="{% trans 'Avatar' %}" src="{{ auth0_user.extra_data.picture }}" width="50" height="50" />
+        <h2>{% blocktrans with name=request.user.first_name %}Welcome, {{ name }}{% endblocktrans %}!</h2>
+
+        <a class="btn btn-primary btn-logout" href="{% url "auth0_logout" %}">{% trans "Log out" %}</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,2 @@
+A new viral video called "{{ title }}" has been created.
+You can preview it at {{ link }}.

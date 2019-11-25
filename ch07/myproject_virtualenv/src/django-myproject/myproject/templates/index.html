@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n utility_tags %}
+
+{% block content %}
+<div class="login-box auth0-box before">
+    <h3>{% trans "Please log in for the best user experience" %}</h3>
+    <a class="btn btn-primary btn-lg" href="{% url "social:begin" backend="auth0" %}">{% trans "Log in" %}</a>
+</div>
+{% endblock %}
