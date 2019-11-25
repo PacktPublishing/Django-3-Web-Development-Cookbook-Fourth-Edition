@@ -85,6 +85,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "myproject.apps.csp_fix.middleware.CSPMiddleware",
 ]
 
 ROOT_URLCONF = "myproject.urls"
@@ -233,3 +234,9 @@ AUTHENTICATION_BACKENDS = {
 
 LOGIN_URL = "/login/auth0"
 LOGIN_REDIRECT_URL = "dashboard"
+
+# Content Security Policy
+
+CSP_DEFAULT_SRC = ["'self'", "https://stackpath.bootstrapcdn.com/", "https://code.jquery.com/", "https://cdnjs.cloudflare.com/"]
+
+CSP_IMG_SRC = ["*", "data:"]
