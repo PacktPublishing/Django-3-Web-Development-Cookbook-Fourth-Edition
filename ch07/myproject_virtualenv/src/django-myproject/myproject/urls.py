@@ -13,7 +13,8 @@ urlpatterns = i18n_patterns(
     path("logout/", auth0_views.logout, name="auth0_logout"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("", include("social_django.urls")),
-    path("admin/", admin.site.urls),
+    path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
+    path("administration/", admin.site.urls),
     path("ideas/", include(("myproject.apps.ideas.urls", "ideas"), namespace="ideas")),
 )
 

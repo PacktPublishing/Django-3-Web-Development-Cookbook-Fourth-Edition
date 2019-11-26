@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "imagekit",
     "social_django",
+    "myproject.apps.admin_honeypot_fix.apps.AdminHoneypotConfig",
     # local
     "myproject.apps.core",
     "myproject.apps.ideas",
