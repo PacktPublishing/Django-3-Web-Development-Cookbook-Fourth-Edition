@@ -1,0 +1,58 @@
+version: "3.7"
+
+services:
+  memcached:
+    image: memcached:latest
+
+  redis:
+    image: redis:latest
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/home/myproject/static
+      - media_volume:/home/myproject/media
+    depends_on:
+      - gunicorn
+
+  gunicorn:
+    build:
+      context: .
+      args:
+        PIP_REQUIREMENTS: "${PIP_REQUIREMENTS}"
+    command: bash -c "while :; do :; done & kill -STOP $$! && wait $$!"
+    #command: bash -c "/home/myproject/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 myproject.wsgi:application"
+    depends_on:
+      - db
+    volumes:
+      - static_volume:/home/myproject/static
+      - media_volume:/home/myproject/media
+    expose:
+      - "8000"
+    environment:
+      - "DJANGO_SETTINGS_MODULE"
+      - "DJANGO_SECRET_KEY"
+      - "DATABASE_NAME"
+      - "DATABASE_USER"
+      - "DATABASE_PASSWORD"
+      - "CACHE_LOCATION=memcached:11211"
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: "${DATABASE_NAME}"
+      POSTGRES_USER: "${DATABASE_USER}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+    ports:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

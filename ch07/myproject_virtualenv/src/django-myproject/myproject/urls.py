@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.conf.urls.i18n import i18n_patterns
-from django.shortcuts import redirect
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,6 +15,7 @@ urlpatterns = i18n_patterns(
     path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
     path("administration/", admin.site.urls),
     path("ideas/", include(("myproject.apps.ideas.urls", "ideas"), namespace="ideas")),
+    path("videos/", include("myproject.apps.viral_videos.urls")),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     # local
     "myproject.apps.core",
     "myproject.apps.ideas",
+    "myproject.apps.viral_videos",
 ]
 
 MIDDLEWARE = [
@@ -236,8 +237,38 @@ AUTHENTICATION_BACKENDS = {
 LOGIN_URL = "/login/auth0"
 LOGIN_REDIRECT_URL = "dashboard"
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 # Content Security Policy
 
-CSP_DEFAULT_SRC = ["'self'", "https://stackpath.bootstrapcdn.com/", "https://code.jquery.com/", "https://cdnjs.cloudflare.com/"]
+CSP_DEFAULT_SRC = [
+    "'self'",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://code.jquery.com/",
+    "https://cdnjs.cloudflare.com/",
+]
 
 CSP_IMG_SRC = ["*", "data:"]
+CSP_FRAME_SRC = ["*"]
+
+
+ADMINS = (("Admin", "administrator@example.com"),)
+
+CACHES = {
+    "memcached": {
+        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "LOCATION": get_secret("CACHE_LOCATION"),
+        "TIMEOUT": 60,  # 1 minute
+        "KEY_PREFIX": "myproject",
+    },
+    "redis": {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": [get_secret("CACHE_LOCATION")],
+        "TIMEOUT": 60,  # 1 minute
+        "KEY_PREFIX": "myproject",
+    },
+}
+CACHES["default"] = CACHES["redis"]
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
