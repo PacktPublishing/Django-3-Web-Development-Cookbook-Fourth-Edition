@@ -87,7 +87,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    "myproject.apps.csp_fix.middleware.CSPMiddleware",
+    "csp.middleware.CSPMiddleware",
 ]
 
 ROOT_URLCONF = "myproject.urls"
@@ -106,7 +106,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "myproject.apps.core.context_processors.website_url",
-                "myproject.apps.auth0login.context_processors.auth0",
+                "myproject.apps.auth0_login.context_processors.auth0",
             ]
         },
     }
@@ -230,7 +230,7 @@ SOCIAL_AUTH_AUTH0_SECRET = get_secret("SOCIAL_AUTH_AUTH0_SECRET")
 SOCIAL_AUTH_AUTH0_SCOPE = ["openid", "profile", "email"]
 
 AUTHENTICATION_BACKENDS = {
-    "myproject.apps.auth0login.auth0backend.Auth0",
+    "myproject.apps.auth0_login.auth0_backend.Auth0",
     "django.contrib.auth.backends.ModelBackend",
 }
 

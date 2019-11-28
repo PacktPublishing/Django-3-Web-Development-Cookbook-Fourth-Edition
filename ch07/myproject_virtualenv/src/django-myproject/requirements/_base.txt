@@ -7,10 +7,11 @@ Django==3.0rc1
 django-admin-honeypot==1.1.0
 django-appconf==1.0.3
 django-crispy-forms==1.8.1
-django-csp==3.5
+-e git+https://github.com/mozilla/django-csp.git@ad27756#egg=django-csp
 django-imagekit==4.0.2
 ecdsa==0.14.1
 future==0.18.2
+hiredis==1.0.1
 idna==2.8
 oauthlib==3.1.0
 pilkit==2.0

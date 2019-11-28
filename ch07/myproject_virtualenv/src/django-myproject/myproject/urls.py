@@ -4,7 +4,7 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from myproject.apps.auth0login import views as auth0_views
+from myproject.apps.auth0_login import views as auth0_views
 
 urlpatterns = i18n_patterns(
     path("", auth0_views.index, name="index"),
