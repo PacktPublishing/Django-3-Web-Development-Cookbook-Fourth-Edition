@@ -244,10 +244,13 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 CSP_DEFAULT_SRC = [
     "'self'",
     "https://stackpath.bootstrapcdn.com/",
+]
+CSP_SCRIPT_SRC = [
+    "'self'",
+    "https://stackpath.bootstrapcdn.com/",
     "https://code.jquery.com/",
     "https://cdnjs.cloudflare.com/",
 ]
-
 CSP_IMG_SRC = ["*", "data:"]
 CSP_FRAME_SRC = ["*"]
 
