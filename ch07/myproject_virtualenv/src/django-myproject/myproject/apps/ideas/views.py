@@ -72,7 +72,7 @@ def delete_idea(request, pk):
 @login_required
 def download_idea_picture(request, pk):
     idea = get_object_or_404(Idea, pk=pk)
-    try:
+    if idea.picture:
         filename, extension = os.path.splitext(idea.picture.file.name)
         extension = extension[1:]  # remove the dot
         response = FileResponse(
@@ -83,7 +83,7 @@ def download_idea_picture(request, pk):
             "attachment; filename="
             f"{slug}.{extension}"
         )
-    except ValueError:
+    else:
         response = HttpResponseNotFound(
             content="Picture unavailable"
         )

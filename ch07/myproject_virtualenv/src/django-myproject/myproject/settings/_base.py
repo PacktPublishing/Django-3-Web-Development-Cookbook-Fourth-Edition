@@ -106,7 +106,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "myproject.apps.core.context_processors.website_url",
-                "myproject.apps.auth0_login.context_processors.auth0",
+                "myproject.apps.external_auth.context_processors.auth0",
             ]
         },
     }
@@ -223,14 +223,14 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = get_secret("SOCIAL_AUTH_AUTH0_DOMAIN")
-SOCIAL_AUTH_AUTH0_KEY = get_secret("SOCIAL_AUTH_AUTH0_KEY")
-SOCIAL_AUTH_AUTH0_SECRET = get_secret("SOCIAL_AUTH_AUTH0_SECRET")
+SOCIAL_AUTH_AUTH0_DOMAIN = get_secret("AUTH0_DOMAIN")
+SOCIAL_AUTH_AUTH0_KEY = get_secret("AUTH0_KEY")
+SOCIAL_AUTH_AUTH0_SECRET = get_secret("AUTH0_SECRET")
 SOCIAL_AUTH_AUTH0_SCOPE = ["openid", "profile", "email"]
+SOCIAL_AUTH_TRAILING_SLASH = False
 
 AUTHENTICATION_BACKENDS = {
-    "myproject.apps.auth0_login.auth0_backend.Auth0",
+    "myproject.apps.external_auth.backends.Auth0",
     "django.contrib.auth.backends.ModelBackend",
 }
 

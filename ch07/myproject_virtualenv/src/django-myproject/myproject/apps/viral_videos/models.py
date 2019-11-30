@@ -34,11 +34,11 @@ class ViralVideo(CreationModificationDateBase, UrlBase):
 
     def get_thumbnail_url(self):
         if not hasattr(self, "_thumbnail_url_cached"):
+            self._thumbnail_url_cached = ""
             url_pattern = re.compile(
                 r'src="https://www.youtube.com/embed/([^"]+)"'
             )
             match = url_pattern.search(self.embed_code)
-            self._thumbnail_url_cached = ""
             if match:
                 video_id = match.groups()[0]
                 self._thumbnail_url_cached = (

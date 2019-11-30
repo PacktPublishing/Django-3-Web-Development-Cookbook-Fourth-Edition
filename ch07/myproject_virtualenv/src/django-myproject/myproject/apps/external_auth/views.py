@@ -1,4 +1,3 @@
-import json
 from urllib.parse import urlencode
 
 from django.shortcuts import render, redirect

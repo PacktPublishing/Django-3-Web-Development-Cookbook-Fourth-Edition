@@ -7,8 +7,9 @@ Django==3.0rc1
 django-admin-honeypot==1.1.0
 django-appconf==1.0.3
 django-crispy-forms==1.8.1
--e git+https://github.com/mozilla/django-csp.git@ad27756#egg=django-csp
+-e git+https://github.com/mozilla/django-csp.git@ad277563da92af3b7fdda45dd2da51b65e8dd560#egg=django_csp
 django-imagekit==4.0.2
+django-redis-cache==2.1.0
 ecdsa==0.14.1
 future==0.18.2
 hiredis==1.0.1
@@ -24,6 +25,7 @@ python-jose==3.0.1
 python-memcached==1.59
 python3-openid==3.1.0
 pytz==2019.2
+redis==3.3.11
 requests==2.22.0
 requests-oauthlib==1.3.0
 rsa==4.0

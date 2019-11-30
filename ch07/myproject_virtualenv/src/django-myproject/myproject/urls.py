@@ -4,12 +4,12 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from myproject.apps.auth0_login import views as auth0_views
+from myproject.apps.external_auth import views as external_auth_views
 
 urlpatterns = i18n_patterns(
-    path("", auth0_views.index, name="index"),
-    path("dashboard/", auth0_views.dashboard, name="dashboard"),
-    path("logout/", auth0_views.logout, name="auth0_logout"),
+    path("", external_auth_views.index, name="index"),
+    path("dashboard/", external_auth_views.dashboard, name="dashboard"),
+    path("logout/", external_auth_views.logout, name="auth0_logout"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("", include("social_django.urls")),
     path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
