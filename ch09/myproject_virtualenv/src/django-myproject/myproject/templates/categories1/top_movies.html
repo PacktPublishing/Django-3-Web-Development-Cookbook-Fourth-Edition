@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n static utility_tags %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'movies/css/rating.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'site/css/movie_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>{% trans "Top Movies" %}</h2>
+<div class="movie-list object-list">
+    {% trans "IMDB rating" as rating_label %}
+    {% for movie in object_list %}
+        <p class="movie item alert alert-info">
+            <span class="rank">{{ movie.rank }}</span>
+            <span class="rating"
+                  title="{{ rating_label }}: {{ movie.rating }}">
+            <s style="width:{{ movie.rating_percentage }}%"></s>
+        </span>
+            <strong class="title">{{ movie.title }}</strong>
+            <span class="year">{{ movie.release_year }}</span>
+        </p>
+    {% endfor %}
+
+    {% if object_list.has_next %}
+        <p class="pagination">
+            <a class="next_page"
+               href="{% modify_query page=object_list.next_page_number %}">
+                {% trans "More..." %}</a>
+        </p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extrabody %}
+    <script type="text/template" class="loader">
+        <img src="{% static 'site/img/loading.gif' %}"
+             alt="Loading..."></script>
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.3.9/jquery.jscroll.min.js"></script>
+    <script src="{% static 'site/js/list.js' %}"></script>
+{% endblock %}

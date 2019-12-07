@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<h2>{% trans "Locations" %}</h2>
+<ul class="location-list">
+    {% for location in location_list %}
+    <li class="item">
+        <a href="{% url "location-detail" slug=location.slug %}"
+           data-popup-url="{% url "location-popup" slug=location.slug %}">
+            {{ location.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extrabody %}
+<div id="popup" class="modal fade" tabindex="-1" role="dialog"
+     aria-hidden="true" aria-labelledby="popup-modal-title">
+    <div class="modal-dialog modal-dialog-centered"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="popup-modal-title"
+                    class="modal-title"></h4>
+                <button type="button" class="close"
+                        data-dismiss="modal"
+                        aria-label="{% trans 'Close' %}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'site/js/location_list.js' %}"></script>
+{% endblock %}

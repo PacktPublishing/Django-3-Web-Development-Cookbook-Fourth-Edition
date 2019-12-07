@@ -1,0 +1,1 @@
+default_app_config = "myproject.apps.categories2.apps.Categories2AppConfig"

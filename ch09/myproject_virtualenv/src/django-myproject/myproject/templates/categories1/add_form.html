@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'site/css/movie_add.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h2>{% trans "Add Movie" %}</h2>
+    <div id="form_add_movie">
+        {% crispy form %}
+    </div>
+{% endblock %}

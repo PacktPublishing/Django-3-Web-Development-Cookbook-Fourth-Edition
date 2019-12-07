@@ -1,0 +1,143 @@
+{% extends "base_two_columns.html" %}
+{% load utility_tags %}
+
+{% block sidebar %}
+    <div class="filters panel-group" id="accordion">
+        {% with title="Genre" selected=facets.selected.genre %}
+        <div class="panel panel-default">
+            {% include "movies/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse collapse in">
+                <div class="panel-body"><div class="list-group">
+                    {% include "movies/includes/filter_all.html" with param="genre" %}
+                    {% for cat in facets.categories.genres %}
+                    <a class="list-group-item
+                              {% if selected == cat %}
+                              active{% endif %}"
+                       href="{% modify_query "page" genre=cat.pk %}">
+                        {{ cat }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+        {% endwith %}
+        {% with title="Director" selected=facets.selected.director %}
+        <div class="panel panel-default">
+            {% include "movies/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse collapse in">
+                <div class="panel-body"><div class="list-group">
+                    {% include "movies/includes/filter_all.html" with param="director" %}
+                    {% for cat in facets.categories.directors %}
+                    <a class="list-group-item
+                              {% if selected == cat %}
+                              active{% endif %}"
+                       href="{% modify_query "page" director=cat.pk %}">
+                        {{ cat }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+        {% endwith %}
+        {% with title="Actor" selected=facets.selected.actor %}
+        <div class="panel panel-default">
+            {% include "movies/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse collapse in">
+                <div class="panel-body"><div class="list-group">
+                    {% include "movies/includes/filter_all.html" with param="actor" %}
+                    {% for cat in facets.categories.actors %}
+                    <a class="list-group-item
+                              {% if selected == cat %}
+                              active{% endif %}"
+                       href="{% modify_query "page" actor=cat.pk %}">
+                        {{ cat }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+        {% endwith %}
+        {% with title="Rating" selected=facets.selected.rating %}
+        <div class="panel panel-default">
+            {% include "movies/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse collapse">
+                <div class="panel-body"><div class="list-group">
+                    {% include "movies/includes/filter_all.html" with param="rating" %}
+                    {% for r_val, r_display in facets.categories.ratings %}
+                    <a class="list-group-item
+                              {% if selected.0 == r_val %}
+                              active{% endif %}"
+                       href="{% modify_query "page" rating=r_val %}">
+                        {{ r_display }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+        {% endwith %}
+        {% with title="Category" %}
+        <div class="panel panel-default">
+            {% include "movies/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse collapse">
+                <div class="panel-body"><div class="list-group">
+                    {{ form.category }}
+                </div></div>
+            </div>
+        </div>
+        {% endwith %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="movie_list">
+        {% for movie in object_list %}
+            <div class="movie alert alert-info">
+                <p>{{ movie.title }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if object_list.has_other_pages %}
+    <nav aria-label="Movie list pagination">
+    <ul class="pagination">
+        {% if object_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% modify_query page=object_list.previous_page_number %}">
+            &laquo;</a></li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span></span></li>
+        {% endif %}
+
+        {% for page_number in object_list.paginator.page_range %}
+            {% if page_number == object_list.number %}
+            <li class="page-item active">
+                <span class="page-link">{{ page_number }}
+                    <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link"
+                   href="{% modify_query page=page_number %}">
+                    {{ page_number }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if object_list.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% modify_query page=object_list.next_page_number %}">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span></a></li>
+        {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+    </ul>
+    </nav>
+    {% endif %}
+{% endblock %}

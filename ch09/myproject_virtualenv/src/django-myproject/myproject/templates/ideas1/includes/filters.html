@@ -1,0 +1,57 @@
+{% load i18n utility_tags %}
+<div class="filters panel-group" id="accordion">
+    {% with title=_('Author') selected=facets.selected.author %}
+        <div class="panel panel-default my-3">
+            {% include "misc/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse{% if not selected %} collapse{% endif %}">
+                <div class="panel-body"><div class="list-group">
+                    {% include "misc/includes/filter_all.html" with param="author" %}
+                    {% for cat in facets.categories.authors %}
+                        <a class="list-group-item
+                          {% if selected == cat %}
+                          active{% endif %}"
+                           href="{% modify_query "page" author=cat.pk %}">
+                            {{ cat }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with title=_('Category') selected=facets.selected.category %}
+        <div class="panel panel-default my-3">
+            {% include "misc/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse{% if not selected %} collapse{% endif %}">
+                <div class="panel-body"><div class="list-group">
+                    {% include "misc/includes/filter_all.html" with param="category" %}
+                    {% for cat in facets.categories.categories %}
+                        <a class="list-group-item
+                          {% if selected == cat %}
+                          active{% endif %}"
+                           href="{% modify_query "page" category=cat.pk %}">
+                            {{ cat }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+    {% endwith %}
+    {% with title=_('Rating') selected=facets.selected.rating %}
+        <div class="panel panel-default my-3">
+            {% include "misc/includes/filter_heading.html" with title=title %}
+            <div id="collapse-{{ title|slugify }}"
+                 class="panel-collapse{% if not selected %} collapse{% endif %}">
+                <div class="panel-body"><div class="list-group">
+                    {% include "misc/includes/filter_all.html" with param="rating" %}
+                    {% for r_val, r_display in facets.categories.ratings %}
+                        <a class="list-group-item
+                          {% if selected.0 == r_val %}
+                          active{% endif %}"
+                           href="{% modify_query "page" rating=r_val %}">
+                            {{ r_display }}</a>
+                    {% endfor %}
+                </div></div>
+            </div>
+        </div>
+    {% endwith %}
+</div>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <a href="{% url "ideas1:idea_list" %}">{% trans "List of ideas" %}</a>
+    <form action="{{ request.path }}" method="POST">
+        {% csrf_token %}
+        <h1>{% trans "Delete Idea?" %}</h1>
+        <p>
+            {% blocktrans trimmed with title=idea.title url_path=idea.get_url_path %}
+                Do you really want to delete idea "<a href="{{ url_path }}">{{ title }}</a>"?
+            {% endblocktrans %}
+        </p>
+        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+    </form>
+{% endblock %}

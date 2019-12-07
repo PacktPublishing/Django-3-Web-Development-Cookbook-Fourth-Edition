@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block footer %}
+{{ block.super }}
+<style nonce="{{ request.csp_nonce }}">
+.button.download-gravatar {
+    padding: 2px 10px;
+}
+</style>
+<script nonce="{{ request.csp_nonce }}">
+django.jQuery(function($) {
+    $('.js_download_gravatar').on('click', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).data('url'),
+            cache: 'false',
+            dataType: 'json',
+            type: 'POST',
+            data: {},
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+            }
+        }).then(function(data) {
+            console.log('Gravatar downloaded.');
+            document.location.reload(true);
+        }, function(data) {
+            console.log('There were problems downloading the Gravatar.');
+            document.location.reload(true);
+        });
+    })
+})
+
+</script>
+{% endblock %}

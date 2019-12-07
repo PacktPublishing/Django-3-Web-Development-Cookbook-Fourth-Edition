@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="panel-heading">
+    <h6 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion"
+           href="#collapse-{{ title|slugify }}">{% blocktrans %}
+                Filter by {{ title }}{% endblocktrans %}</a>
+    </h6>
+</div>

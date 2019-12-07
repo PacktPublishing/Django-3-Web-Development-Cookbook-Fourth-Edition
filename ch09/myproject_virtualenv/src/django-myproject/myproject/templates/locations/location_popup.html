@@ -1,0 +1,16 @@
+{% load i18n thumbnail %}
+
+{% thumbnail location.image "200" as small_image %}
+    <p class="text-center">
+        <img src="{{ small_image.url }}" class="img-thumbnail"
+             alt="{{ location.title|escape }}" />
+    </p>
+{% endthumbnail %}
+
+<div class="modal-footer text-right">
+    <a href="{% url "location-detail" slug=location.slug %}"
+       class="btn btn-primary pull-right">
+        {% trans "More" %}
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+</div>
