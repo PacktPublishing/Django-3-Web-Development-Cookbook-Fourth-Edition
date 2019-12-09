@@ -29,11 +29,11 @@ class IdeaForm(forms.ModelForm):
         self.request = request
         super().__init__(*args, **kwargs)
 
-        title_field = layout.Field("title", css_class="input-block-level")
-        content_field = layout.Field("content", css_class="input-block-level", rows="3")
+        title_field = layout.Field("title")
+        content_field = layout.Field("content", rows="3")
         main_fieldset = layout.Fieldset(_("Main data"), title_field, content_field)
 
-        picture_field = layout.Field("picture", css_class="input-block-level")
+        picture_field = layout.Field("picture")
         format_html = layout.HTML(
             """{% include "ideas1/includes/picture_guidelines.html" %}"""
         )
@@ -55,7 +55,7 @@ class IdeaForm(forms.ModelForm):
         )
 
         submit_button = layout.Submit("save", _("Save"))
-        actions = bootstrap.FormActions(submit_button)
+        actions = bootstrap.FormActions(submit_button, css_class="my-4")
 
         self.helper = helper.FormHelper()
         self.helper.form_action = self.request.path

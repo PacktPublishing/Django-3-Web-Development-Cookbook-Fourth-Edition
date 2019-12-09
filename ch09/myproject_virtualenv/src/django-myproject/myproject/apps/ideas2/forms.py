@@ -24,11 +24,11 @@ class IdeaForm(forms.ModelForm):
 
         self.fields["categories"].widget = forms.CheckboxSelectMultiple()
 
-        title_field = layout.Field("title", css_class="input-block-level")
-        content_field = layout.Field("content", css_class="input-block-level", rows="3")
+        title_field = layout.Field("title")
+        content_field = layout.Field("content", rows="3")
         main_fieldset = layout.Fieldset(_("Main data"), title_field, content_field)
 
-        picture_field = layout.Field("picture", css_class="input-block-level")
+        picture_field = layout.Field("picture")
         format_html = layout.HTML(
             """{% include "ideas2/includes/picture_guidelines.html" %}"""
         )
@@ -41,7 +41,7 @@ class IdeaForm(forms.ModelForm):
             css_id="picture_fieldset",
         )
 
-        categories_field = layout.Field("categories", css_class="input-block-level")
+        categories_field = layout.Field("categories")
         categories_fieldset = layout.Fieldset(
             _("Categories"), categories_field, css_id="categories_fieldset"
         )

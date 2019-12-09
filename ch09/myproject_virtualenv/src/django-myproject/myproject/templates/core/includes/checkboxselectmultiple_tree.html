@@ -1,5 +1,4 @@
-{% load crispy_forms_filters %}
-{% load l10n %}
+{% load crispy_forms_filters l10n %}
 
 <div class="{% if field_class %} {{ field_class }}{% endif %}"{% if flat_attrs %} {{ flat_attrs|safe }}{% endif %}>
 
@@ -16,7 +15,6 @@
     {% endfor %}
     {% if field.errors and inline_class %}
     <div class="w-100 {%if use_custom_control%}custom-control custom-checkbox{% if inline_class %} custom-control-inline{% endif %}{% else %}form-check{% if inline_class %} form-check-inline{% endif %}{% endif %}">
-        {# the following input is only meant to allow boostrap to render the error message as it has to be after an invalid input. As the input has no name, no data will be sent. #}
         <input type="checkbox" class="custom-control-input {% if field.errors %}is-invalid{%endif%}">
         {% include 'bootstrap4/layout/field_errors_block.html' %}
     </div>
