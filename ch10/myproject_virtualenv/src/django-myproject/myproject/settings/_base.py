@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.forms",
     "django.contrib.gis",
+    "django.contrib.sitemaps",
     # third-party
     "rest_framework",
     # local
