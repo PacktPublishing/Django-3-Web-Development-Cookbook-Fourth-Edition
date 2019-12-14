@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    {% with song=object %}
+        <h1>{{ song }}</h1>
+        {% if song.image %}
+            <img src="{{ song.image.url }}" alt="{{ song }}" />
+        {% endif %}
+        {% if song.url %}
+            <a href="{{ song.url }}" target="_blank" rel="noreferrer noopener">{% trans "Check on Last.fm" %}</a>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
