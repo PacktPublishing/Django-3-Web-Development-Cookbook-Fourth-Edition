@@ -39,4 +39,4 @@ class Command(BaseCommand):
     def finalize(self):
         if self.verbosity >= self.NORMAL:
             self.stdout.write(f"-------------------------\n")
-            self.stdout.write(f"Songs exported: {self.counter}\n")
+            self.stdout.write(f"Songs exported: {self.counter}\n\n")

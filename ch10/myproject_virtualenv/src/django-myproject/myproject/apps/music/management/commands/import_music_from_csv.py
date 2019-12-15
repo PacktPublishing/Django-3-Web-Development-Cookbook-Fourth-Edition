@@ -52,4 +52,4 @@ class Command(BaseCommand):
         if self.verbosity >= self.NORMAL:
             self.stdout.write(f"-------------------------\n")
             self.stdout.write(f"Songs imported: {self.imported_counter}\n")
-            self.stdout.write(f"Songs skipped: {self.skipped_counter}\n")
+            self.stdout.write(f"Songs skipped: {self.skipped_counter}\n\n")
