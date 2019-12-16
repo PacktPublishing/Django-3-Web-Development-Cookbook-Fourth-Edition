@@ -14,11 +14,9 @@ class SongList(ListView, FormView):
     model = Song
 
     def get(self, request, *args, **kwargs):
-        # From ProcessFormMixin
         form_class = self.get_form_class()
         self.form = self.get_form(form_class)
 
-        # From BaseListView
         self.object_list = self.get_queryset()
         allow_empty = self.get_allow_empty()
         if not allow_empty and len(self.object_list) == 0:
@@ -28,8 +26,16 @@ class SongList(ListView, FormView):
         context = self.get_context_data(object_list=self.object_list, form=self.form)
         return self.render_to_response(context)
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
+    def get_form_kwargs(self):
+        kwargs = {
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+        if self.request.method == 'GET':
+            kwargs.update({
+                'data': self.request.GET,
+            })
+        return kwargs
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -38,20 +44,6 @@ class SongList(ListView, FormView):
             if artist:
                 queryset = queryset.filter(artist=artist)
         return queryset
-
-    def get_form_kwargs(self):
-        """Return the keyword arguments for instantiating the form."""
-        kwargs = {
-            'initial': self.get_initial(),
-            'prefix': self.get_prefix(),
-        }
-
-        if self.request.method in ('GET', 'POST', 'PUT'):
-            kwargs.update({
-                'data': self.request.POST or self.request.GET,
-                'files': self.request.FILES,
-            })
-        return kwargs
 
 
 class SongDetail(DetailView):

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     help = "Imports top songs from last.fm as XML."
     SILENT, NORMAL, VERBOSE, VERY_VERBOSE = 0, 1, 2, 3
-    API_URL = "http://ws.audioscrobbler.com/2.0/"
+    API_URL = "https://ws.audioscrobbler.com/2.0/"
 
     def add_arguments(self, parser):
         # Named (optional) arguments

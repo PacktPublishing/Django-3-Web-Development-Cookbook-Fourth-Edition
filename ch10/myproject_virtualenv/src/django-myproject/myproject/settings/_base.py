@@ -227,7 +227,7 @@ AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 50,
@@ -236,4 +236,3 @@ REST_FRAMEWORK = {
 # Last.fm API
 
 LAST_FM_API_KEY = get_secret("LAST_FM_API_KEY")
-LAST_FM_SHARED_SECRET = get_secret("LAST_FM_SHARED_SECRET")

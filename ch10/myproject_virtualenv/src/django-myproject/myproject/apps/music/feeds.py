@@ -39,9 +39,6 @@ class SongFeed(Feed):
             url = f"{url}?{qs}"
         return url
 
-    def item_pubdate(self, item):
-        return item.created
-
     def items(self, obj):
         queryset = Song.objects.order_by("-created")
 
@@ -50,3 +47,7 @@ class SongFeed(Feed):
             queryset = queryset.filter(artist=artist)
 
         return queryset[:30]
+
+    def item_pubdate(self, item):
+        return item.created
+
