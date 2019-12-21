@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>{{ video.title }}
+        <span class="badge">{{ video.label }}</span>
+    </h1>
+    <div>{{ video.embed_code|safe }}</div>
+    <div>
+        <h2>{% trans "Impressions" %}</h2>
+        <ul>
+            <li>{% trans "Authenticated views" %}:
+                {{ video.authenticated_views }}</li>
+            <li>{% trans "Anonymous views" %}:
+                {{ video.anonymous_views }}</li>
+            <li>{% trans "Total views" %}:
+                {{ video.total_views }}</li>
+        </ul>
+    </div>
+{% endblock %}
