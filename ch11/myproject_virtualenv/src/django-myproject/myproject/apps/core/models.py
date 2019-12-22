@@ -203,7 +203,7 @@ def object_relation_base_factory(
     return TheClass
 
 
-class CreatorMixin(models.Model):
+class CreatorBase(models.Model):
     """
     Abstract base class with a creator
     """

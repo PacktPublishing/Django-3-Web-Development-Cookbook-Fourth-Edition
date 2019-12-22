@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h1>{% trans "Viral Videos" %}</h1>
+    <ul>
+        {% for video in object_list %}
+            <li><a href="{{ video.get_url_path }}">{{ video.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

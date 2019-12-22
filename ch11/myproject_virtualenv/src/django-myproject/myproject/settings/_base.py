@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     # local
     "myproject.apps.core",
     "myproject.apps.viral_videos",
+    "myproject.apps.guerrilla_patches",
 ]
 
 MIDDLEWARE = [
@@ -249,6 +250,17 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.redirects.RedirectsPanel",
 ]
 
-ADMINS = [
-    ("Administrator", "admin@example.com"),
-]
+ADMINS = [("Administrator", "admin@example.com")]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "tmp", "debug.log"),
+        }
+    },
+    "loggers": {"django": {"handlers": ["file"], "level": "DEBUG", "propagate": True}},
+}
