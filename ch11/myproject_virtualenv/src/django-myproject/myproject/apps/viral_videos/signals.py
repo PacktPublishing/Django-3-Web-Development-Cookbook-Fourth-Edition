@@ -13,22 +13,20 @@ def inform_administrators(sender, **kwargs):
     created = kwargs["created"]
 
     if created:
-        context = {
-            "title": instance.title,
-            "link": instance.get_url(),
-        }
+        context = {"title": instance.title, "link": instance.get_url()}
         subject = render_to_string(
-            'viral_videos/email/administrator/subject.txt',
-            context)
+            "viral_videos/email/administrator/subject.txt", context
+        )
         plain_text_message = render_to_string(
-            'viral_videos/email/administrator/message.txt',
-            context)
+            "viral_videos/email/administrator/message.txt", context
+        )
         html_message = render_to_string(
-            'viral_videos/email/administrator/message.html',
-            context)
+            "viral_videos/email/administrator/message.html", context
+        )
 
         mail_admins(
             subject=subject.strip(),
             message=plain_text_message,
             html_message=html_message,
-            fail_silently=True)
+            fail_silently=True,
+        )

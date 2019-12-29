@@ -125,12 +125,15 @@ dmypy.json
 .pyre/
 
 # Media and Static directories
-**/src/myproject/media/
-!**/src/myproject/media/.gitkeep
-!**/src/myproject/media/ideas/.htaccess
+**/src/django-myproject/media/
+!**/src/django-myproject/media/.gitkeep
+!**/src/django-myproject/media/ideas/.htaccess
 
-/src/myproject/static/
-!/src/myproject/static/.gitkeep
+**/src/django-myproject/static/
+!**/src/django-myproject/static/.gitkeep
+
+**/src/django-myproject/drivers/
+!**/src/django-myproject/drivers/.gitkeep
 
 # Building scripts with sensitive environment variables
 build_dev.sh

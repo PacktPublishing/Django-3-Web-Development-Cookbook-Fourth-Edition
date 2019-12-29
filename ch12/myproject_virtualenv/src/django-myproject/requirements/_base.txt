@@ -1,0 +1,16 @@
+asgiref==3.2.3
+coverage==4.5.3
+Django==3.0.1
+django-appconf==1.0.3
+django-crispy-forms==1.8.1
+django-imagekit==4.0.2
+django-ordered-model==3.3.0
+djangorestframework==3.11.0
+pilkit==2.0
+Pillow==6.2.1
+psycopg2-binary==2.8.3
+pytz==2019.2
+selenium==3.141.0
+six==1.13.0
+sqlparse==0.3.0
+urllib3==1.25.7

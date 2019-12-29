@@ -1,0 +1,20 @@
+{% load i18n %}
+<p class="text-center">
+    {% if location.picture %}
+        <picture class="img-fluid">
+            <source media="(max-width: 480px)"
+                    srcset="{{ location.picture_mobile.url }}"/>
+            <source media="(max-width: 768px)"
+                    srcset="{{ location.picture_tablet.url }}"/>
+            <img src="{{ location.picture_desktop.url }}"
+                 alt="{{ location.name }}"
+                 class="img-fluid"
+            />
+        </picture>
+    {% endif %}
+</p>
+<div class="modal-footer text-right">
+    <a href="{% url "locations:location_detail" pk=location.pk %}" class="btn btn-primary pull-right">
+        {% trans "Learn more…" %}
+    </a>
+</div>

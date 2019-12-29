@@ -1,0 +1,40 @@
+.map {
+    box-sizing: border-box;
+    width: 98%;
+}
+.map .canvas,
+.map ul.locations,
+.map .btn-group {
+    margin: 1rem 0;
+}
+.map .canvas {
+    border: 1px solid #000;
+    box-sizing: padding-box;
+    height: 0;
+    padding-bottom: calc(9 / 16 * 100%); /* 16:9 aspect ratio */
+    width: 100%;
+}
+.map .canvas:before {
+    color: #eee;
+    color: rgba(0, 0, 0, 0.1);
+    content: "map";
+    display: block;
+    font-size: 5rem;
+    line-height: 5rem;
+    margin-top: -25%;
+    padding-top: calc(50% - 2.5rem);
+    text-align: center;
+}
+.map ul.locations {
+    padding: 0;
+}
+.map ul.locations li {
+    border-bottom: 1px solid #ccc;
+    list-style: none;
+}
+.map ul.locations li:first-child {
+    border-top: 1px solid #ccc;
+}
+.map .btn-group .btn.remove-geo {
+    float: right;
+}
