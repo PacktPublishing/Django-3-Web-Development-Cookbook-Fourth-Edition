@@ -4,18 +4,23 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
-import debug_toolbar
+from myproject.apps.music.views import RESTSongList, RESTSongDetail
 
-
-urlpatterns = i18n_patterns(
-    path("admin/", admin.site.urls),
-    path("viral-videos/", include("myproject.apps.viral_videos.urls", namespace="viral_videos")),
-)
 
 urlpatterns = [
-    path('__debug__/', include(debug_toolbar.urls)),
-] + urlpatterns
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("rest-api/songs/", RESTSongList.as_view(), name="rest_song_list"),
+    path(
+        "rest-api/songs/<uuid:pk>/", RESTSongDetail.as_view(), name="rest_song_detail"
+    ),
+]
 
+urlpatterns += i18n_patterns(
+    path("admin/", admin.site.urls),
+    path("songs/", include("myproject.apps.music.urls", namespace="music")),
+    path("locations/", include("myproject.apps.locations.urls", namespace="locations")),
+    path("likes/", include("myproject.apps.likes.urls", namespace="likes")),
+)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static("/media/", document_root=settings.MEDIA_ROOT)

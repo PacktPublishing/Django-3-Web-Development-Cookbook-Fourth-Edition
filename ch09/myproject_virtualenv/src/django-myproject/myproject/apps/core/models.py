@@ -42,17 +42,6 @@ class UrlBase(models.Model):
     def get_absolute_url(self):
         return self.get_url()
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        print("save() from UrlBase called")
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        print("delete() from UrlBase called")
-
-    def test(self):
-        print("test() from UrlBase called")
-
 
 class CreationModificationDateBase(models.Model):
     """
@@ -71,18 +60,6 @@ class CreationModificationDateBase(models.Model):
 
     class Meta:
         abstract = True
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        print("save() from CreationModificationDateBase called")
-    save.alters_data = True
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        print("delete() from CreationModificationDateBase called")
-
-    def test(self):
-        print("test() from CreationModificationDateBase called")
 
 
 class MetaTagsBase(models.Model):
@@ -142,17 +119,6 @@ class MetaTagsBase(models.Model):
             self.get_meta_author(),
             self.get_meta_copyright(),
         )))
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        print("save() from MetaTagsBase called")
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        print("delete() from MetaTagsBase called")
-
-    def test(self):
-        print("test() from MetaTagsBase called")
 
 
 def object_relation_base_factory(

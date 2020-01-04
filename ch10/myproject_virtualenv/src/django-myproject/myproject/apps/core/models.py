@@ -15,6 +15,7 @@ class UrlBase(models.Model):
     Models extending this mixin should have either get_url or get_url_path implemented.
     http://code.djangoproject.com/wiki/ReplacingGetAbsoluteUrl
     """
+
     class Meta:
         abstract = True
 
@@ -26,6 +27,7 @@ class UrlBase(models.Model):
         except NotImplementedError:
             raise
         return settings.WEBSITE_URL + path
+
     get_url.dont_recurse = True
 
     def get_url_path(self):
@@ -37,6 +39,7 @@ class UrlBase(models.Model):
             raise
         bits = urlparse(url)
         return urlunparse(("", "") + bits[2:])
+
     get_url_path.dont_recurse = True
 
     def get_absolute_url(self):
@@ -48,15 +51,9 @@ class CreationModificationDateBase(models.Model):
     Abstract base class with a creation and modification date and time
     """
 
-    created = models.DateTimeField(
-        _("Creation Date and Time"),
-        auto_now_add=True,
-    )
+    created = models.DateTimeField(_("Creation Date and Time"), auto_now_add=True)
 
-    modified = models.DateTimeField(
-        _("Modification Date and Time"),
-        auto_now=True,
-    )
+    modified = models.DateTimeField(_("Modification Date and Time"), auto_now=True)
 
     class Meta:
         abstract = True
@@ -66,27 +63,16 @@ class MetaTagsBase(models.Model):
     """
     Abstract base class for generating meta tags
     """
+
     meta_keywords = models.CharField(
         _("Keywords"),
         max_length=255,
         blank=True,
         help_text=_("Separate keywords with commas."),
     )
-    meta_description = models.CharField(
-        _("Description"),
-        max_length=255,
-        blank=True,
-    )
-    meta_author = models.CharField(
-        _("Author"),
-        max_length=255,
-        blank=True,
-    )
-    meta_copyright = models.CharField(
-        _("Copyright"),
-        max_length=255,
-        blank=True,
-    )
+    meta_description = models.CharField(_("Description"), max_length=255, blank=True)
+    meta_author = models.CharField(_("Author"), max_length=255, blank=True)
+    meta_copyright = models.CharField(_("Copyright"), max_length=255, blank=True)
 
     class Meta:
         abstract = True
@@ -94,10 +80,9 @@ class MetaTagsBase(models.Model):
     def get_meta_field(self, name, content):
         tag = ""
         if name and content:
-            tag = render_to_string("core/includes/meta_field.html", {
-                "name": name,
-                "content": content,
-            })
+            tag = render_to_string(
+                "core/includes/meta_field.html", {"name": name, "content": content}
+            )
         return mark_safe(tag)
 
     def get_meta_keywords(self):
@@ -113,20 +98,25 @@ class MetaTagsBase(models.Model):
         return self.get_meta_field("copyright", self.meta_copyright)
 
     def get_meta_tags(self):
-        return mark_safe("\n".join((
-            self.get_meta_keywords(),
-            self.get_meta_description(),
-            self.get_meta_author(),
-            self.get_meta_copyright(),
-        )))
+        return mark_safe(
+            "\n".join(
+                (
+                    self.get_meta_keywords(),
+                    self.get_meta_description(),
+                    self.get_meta_author(),
+                    self.get_meta_copyright(),
+                )
+            )
+        )
 
 
 def object_relation_base_factory(
-        prefix=None,
-        prefix_verbose=None,
-        add_related_name=False,
-        limit_content_type_choices_to=None,
-        is_required=False):
+    prefix=None,
+    prefix_verbose=None,
+    add_related_name=False,
+    limit_content_type_choices_to=None,
+    is_required=False,
+):
     """
     Returns a mixin class for generic foreign keys using
     "Content type - object ID" with dynamic field names.
@@ -167,8 +157,9 @@ def object_relation_base_factory(
 
     if add_related_name:
         if not prefix:
-            raise FieldError("if add_related_name is set to "
-                             "True, a prefix must be given")
+            raise FieldError(
+                "if add_related_name is set to " "True, a prefix must be given"
+            )
         related_name = prefix
     else:
         related_name = None
@@ -183,10 +174,12 @@ def object_relation_base_factory(
         related_name=related_name,
         blank=optional,
         null=optional,
-        help_text=_("Please select the type (model) "
-                    "for the relation, you want to build."),
+        help_text=_(
+            "Please select the type (model) " "for the relation, you want to build."
+        ),
         limit_choices_to=limit_content_type_choices_to,
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+    )
 
     fk_verbose_name = prefix_verbose
 
@@ -196,15 +189,42 @@ def object_relation_base_factory(
         null=False,
         help_text=_("Please enter the ID of the related object."),
         max_length=255,
-        default="")  # for migrations
+        default="",
+    )  # for migrations
 
     content_object = GenericForeignKey(
-        ct_field=content_type_field,
-        fk_field=object_id_field)
+        ct_field=content_type_field, fk_field=object_id_field
+    )
 
     TheClass.add_to_class(content_type_field, content_type)
     TheClass.add_to_class(object_id_field, object_id)
-    TheClass.add_to_class(content_object_field,
-                          content_object)
+    TheClass.add_to_class(content_object_field, content_object)
 
     return TheClass
+
+
+class CreatorBase(models.Model):
+    """
+    Abstract base class with a creator
+    """
+
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("creator"),
+        editable=False,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        from .middleware import get_current_user
+
+        if not self.creator:
+            self.creator = get_current_user()
+        super().save(*args, **kwargs)
+
+    save.alters_data = True

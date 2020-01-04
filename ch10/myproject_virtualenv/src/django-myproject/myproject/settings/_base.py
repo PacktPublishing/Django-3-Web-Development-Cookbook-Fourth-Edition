@@ -64,10 +64,11 @@ INSTALLED_APPS = [
     "django.contrib.gis",
     "django.contrib.sitemaps",
     # third-party
-    "rest_framework",
+    "debug_toolbar",
     # local
     "myproject.apps.core",
-    "myproject.apps.music",
+    "myproject.apps.viral_videos",
+    "myproject.apps.guerrilla_patches",
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "myproject.apps.core.middleware.ThreadLocalMiddleware",
 ]
 
 ROOT_URLCONF = "myproject.urls"
@@ -225,14 +228,39 @@ LOGIN_REDIRECT_URL = "start_page"
 
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 50,
+
+DEBUG_TOOLBAR_CONFIG = {
+    "DISABLE_PANELS": [],
+    "SHOW_TOOLBAR_CALLBACK": "myproject.apps.core.misc.custom_show_toolbar",
+    "SHOW_TEMPLATE_CONTEXT": True,
 }
 
-# Last.fm API
+DEBUG_TOOLBAR_PANELS = [
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    "debug_toolbar.panels.logging.LoggingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+]
 
-LAST_FM_API_KEY = get_secret("LAST_FM_API_KEY")
+ADMINS = [("Administrator", "admin@example.com")]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "tmp", "debug.log"),
+        }
+    },
+    "loggers": {"django": {"handlers": ["file"], "level": "DEBUG", "propagate": True}},
+}

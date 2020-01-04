@@ -1,11 +1,35 @@
-.level-0 {
-    margin-left: 0;
+#map {
+    box-sizing: padding-box;
+    height: 0;
+    padding-bottom: calc(9 / 16 * 100%); /* 16:9 aspect ratio */
+    width: 100%;
+}
+@media screen and (max-width: 480px) {
+    #map {
+        display: none; /* hide on mobile devices (esp. portrait) */
+    }
 }
 
-.level-1 {
-    margin-left: 20px;
+.loading-indicator {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
 }
-
-.level-2 {
-    margin-left: 40px;
+.loading-indicator:after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 5px solid rgba(0,0,0,.25);
+  border-color: rgba(0,0,0,.25) transparent rgba(0,0,0,.25) transparent;
+  animation: dual-ring 1.2s linear infinite;
+}
+@keyframes dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

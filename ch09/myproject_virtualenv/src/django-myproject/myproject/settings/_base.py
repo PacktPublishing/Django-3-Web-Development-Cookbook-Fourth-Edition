@@ -62,19 +62,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.forms",
     "django.contrib.gis",
+    "django.contrib.sitemaps",
     # third-party
-    "imagekit",
-    "mptt",
-    "django_mptt_admin",
-    "treebeard",
-    "crispy_forms",
+    "rest_framework",
     # local
     "myproject.apps.core",
-    "myproject.apps.accounts",
-    "myproject.apps.categories1",
-    "myproject.apps.categories2",
-    "myproject.apps.ideas1",
-    "myproject.apps.ideas2",
+    "myproject.apps.music",
 ]
 
 MIDDLEWARE = [
@@ -182,11 +175,6 @@ LANGUAGES = [
     ("es", "Spanish"),
     ("sv", "Swedish"),
 ]
-LANGUAGES_EXCEPT_THE_DEFAULT = [
-    (lang_code, lang_name)
-    for lang_code, lang_name in LANGUAGES
-    if lang_code != LANGUAGE_CODE
-]
 
 COUNTRY_CHOICES = [
     ("BE", _("Belgium")),
@@ -235,10 +223,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 LOGIN_REDIRECT_URL = "start_page"
 
-AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-]
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 50,
+}
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+# Last.fm API
+
+LAST_FM_API_KEY = get_secret("LAST_FM_API_KEY")
