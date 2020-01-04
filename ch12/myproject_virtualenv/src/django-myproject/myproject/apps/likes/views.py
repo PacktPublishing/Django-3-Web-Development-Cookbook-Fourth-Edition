@@ -1,13 +1,14 @@
-import json
+import structlog
 
 from django.contrib.contenttypes.models import ContentType
-from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Like
 from .templatetags.likes_tags import liked_count
+
+logger = structlog.get_logger("django_structlog")
 
 
 @never_cache
@@ -27,8 +28,11 @@ def json_set_like(request, content_type_id, object_id):
             content_type=ContentType.objects.get_for_model(obj),
             object_id=obj.pk,
             user=request.user)
-        if not is_created:
+        if is_created:
+            logger.info("like_created", content_type_id=content_type.pk, object_id=obj.pk)
+        else:
             like.delete()
+            logger.info("like_deleted", content_type_id=content_type.pk, object_id=obj.pk)
 
         result = {
             "success": True,
