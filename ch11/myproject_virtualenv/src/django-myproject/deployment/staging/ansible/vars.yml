@@ -16,7 +16,7 @@ wsgi_module: config.wsgi
 pythonpath: "{{ project_root }}/"
 
 # the git repository URL for the project
-project_repo: git@github.com:myuser/django-myproject.git
+project_repo: git@github.com:archatas/django-myproject.git
 
 # a private key that has access to the repository URL
 ssh_private_key: ~/.ssh/id_rsa

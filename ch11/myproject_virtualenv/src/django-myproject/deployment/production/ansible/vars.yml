@@ -5,7 +5,7 @@ project_name: myproject
 user_username: "{{ project_name }}"
 
 # the base path to install to. You should not need to change this.
-install_root: /var/webapps
+install_root: /home
 
 project_root: "{{ install_root }}/{{ project_name }}"
 
@@ -16,10 +16,10 @@ wsgi_module: config.wsgi
 pythonpath: "{{ project_root }}/project/{{ project_name }}"
 
 # the git repository URL for the project
-project_repo: git@bitbucket.org:archatas/django-myproject.git
+project_repo: git@github.com:archatas/django-myproject.git
 
 # a private key that has access to the repository URL
-ssh_private_key: ~/.ssh/archatas-Bitbucket
+ssh_private_key: ~/.ssh/id_rsa
 
 # The value of your django project's STATIC_ROOT settings.
 static_root: "{{ pythonpath }}/static"

@@ -17,11 +17,6 @@
         line: '127.0.0.1 localhost {{ domain_name }} www.{{ domain_name }}'
         state: present
 
-    - name: Add Apt signing key on remote server to keyring
-      apt_key:
-        id: 7FCC7D46ACCC4CF8
-        keyserver: keyserver.ubuntu.com
-
     - name: Install aptitude
       apt: pkg={{ item }} update-cache=yes
       with_items:
@@ -54,42 +49,27 @@
         repo: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
         update-cache: yes
 
-    - name: Add an Apt signing key for postgresql
-      apt_key:
-        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
-        state: present
-
     - name: Install system packages
       apt: pkg={{ item }} update-cache=yes
       with_items:
+        - certbot
         - git
-        - nginx
-        - postgresql-10
-        - postgresql-server-dev-10
-        - postgresql-client-10
-        - python3-pip
-        - python3-dev
-        - python3-virtualenv
-        - memcached
         - libmemcached-dev
         - mailutils
-        - unzip
-        - libtiff5-dev
-        - libjpeg8-dev
-        - zlib1g-dev
-        - libfreetype6-dev
-        - liblcms2-dev
-        - libwebp-dev
-        - certbot
-        - python-certbot-nginx
-        - redis-server
-        - libcairo2
-        - libpango-1.0-0
-        - libpangocairo-1.0-0
-        - libgdk-pixbuf2.0-0
-        - libffi-dev
-        - shared-mime-info
+        - memcached
+        - nginx
         - postfix
+        - postgresql-10
+        - postgresql-client-10
+        - postgresql-server-dev-10
+        - python-certbot-nginx
+        - python3-dev
+        - python3-pip
+        - python3-virtualenv
+        - redis-server
+        - ssl-cert
+        - tzdata
+        - unzip
 
     - name: Upgrade pip
       pip:
@@ -132,7 +112,7 @@
         mode: 0775
       with_items:
         - "{{ project_root }}/.ssh"
-        - "{{ project_root }}/project"
+        - "{{ project_root }}/src"
         - "{{ project_root }}/db_backups"
         - "{{ project_root }}/logs"
         - "{{ project_root }}/commands"
@@ -150,16 +130,16 @@
     - name: Create virtual environment
       become: yes
       become_user: "{{ user_username }}"
-      command: python3 -m virtualenv {{ project_root }}/env/ --python=python3
+      command: python3 -m virtualenv {{ project_root }}/venv/ --python=python3
       args:
-        creates: "{{ project_root }}/env/bin/python"
+        creates: "{{ project_root }}/venv/bin/python"
 
     - name: Always activate virtual environment for {{ project_name }} user
       lineinfile:
         path: "{{ project_root }}/.bash_profile"
         state: present
         create: yes
-        line: "source {{ project_root }}/env/bin/activate"
+        line: "source {{ project_root }}/venv/bin/activate"
 
     - name: Set the DJANGO_SETTINGS_MODULE
       lineinfile:
