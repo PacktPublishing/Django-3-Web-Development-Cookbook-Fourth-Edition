@@ -1,0 +1,105 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  become: yes
+
+  tasks:
+    - name: Clone/pull project repo
+      git:
+        repo: "{{ project_repo }}"
+        dest: "{{ project_root }}/project/{{ project_name }}"
+        accept_hostkey: yes
+      become: yes
+      become_user: "{{ user_username }}"
+      notify:
+        - restart gunicorn
+
+    - name: Install python packages
+      pip:
+        requirements: "{{ project_root }}/project/{{ project_name }}/requirements/production.txt"
+        virtualenv: "{{ project_root }}/env"
+        virtualenv_site_packages: yes
+      become: yes
+      become_user: "{{ user_username }}"
+      notify:
+        - restart gunicorn
+
+    - name: Copy secrets.json
+      template:
+        src: ../../../myproject/settings/secrets.json
+        dest: "{{ project_root }}/project/{{ project_name }}/{{ project_name }}/settings/secrets.json"
+
+    - name: Django migrate
+      django_manage:
+        command: migrate
+        app_path: "{{ project_root }}/project/{{ project_name }}"
+        pythonpath: "{{ pythonpath }}"
+        settings: "{{ django_settings }}"
+        virtualenv: "{{ project_root }}/env/"
+      become: yes
+      become_user: "{{ user_username }}"
+
+    - name: Django collectstatic
+      django_manage:
+        command: collectstatic
+        app_path: "{{ project_root }}/project/{{ project_name }}"
+        pythonpath: "{{ pythonpath }}"
+        settings: "{{ django_settings }}"
+        virtualenv: "{{ project_root }}/env/"
+      become: yes
+      become_user: "{{ user_username }}"
+
+    - name: Create a log file for system events
+      file:
+        path: "{{ project_root }}/project/{{ project_name }}/logs/events.log"
+        state: touch
+        owner: "{{ user_username }}"
+        group: "www-data"
+
+    - name: Copy Gunicorn config for myproject website
+      template: src=../../ansible_templates/gunicorn.j2 dest=/etc/systemd/system/gunicorn.service mode=0744
+      notify:
+        - restart gunicorn
+
+    - name: Make sure Gunicorn server is running and enabled to survive reboot
+      service: name=gunicorn.service state=started enabled=yes daemon_reload=yes
+
+    - name: Restart gunicorn for start page
+      command: /bin/true
+      notify: restart gunicorn
+
+    - name: Make sure that Redis is running and is enabled to survive reboot
+      service: name=redis-server state=started enabled=yes
+
+    - name: Make sure Nginx server is running and enabled to survive reboot
+      service: name=nginx state=started enabled=yes
+
+    - name: Create database backup script
+      block:
+        - name: Copy backup script
+          template: src="../../ansible_templates/backup_database.j2" dest="{{ project_root }}/commands/backup_database.sh" mode=0744
+          become: yes
+          become_user: "{{ user_username }}"
+
+        - name: Copy restoring script
+          template: src="../../ansible_templates/restore_database.j2" dest="{{ project_root }}/commands/restore_database.sh" mode=0744
+          become: yes
+          become_user: "{{ user_username }}"
+
+        - name: Add cronjob for database backups
+          cron:
+            name: "database backup"
+            minute: "0"
+            hour: "3"
+            job: "{{ project_root }}/commands/backup_database.sh"
+          become: yes
+          become_user: "{{ user_username }}"
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+    - name: restart gunicorn
+      service: name=gunicorn.service state=restarted

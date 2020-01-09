@@ -1,0 +1,5 @@
+[servers]
+firstthingsfirst ansible_ssh_host=159.65.118.167 ansible_ssh_port=22 ansible_ssh_user=root
+
+[servers:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,45 @@
+---
+# a unix path-friendly name (IE, no spaces or special characters)
+project_name: myproject
+
+user_username: "{{ project_name }}"
+
+# the base path to install to. You should not need to change this.
+install_root: /home
+
+project_root: "{{ install_root }}/{{ project_name }}"
+
+# the python module path to your project's wsgi file
+wsgi_module: config.wsgi
+
+# any directories that need to be added to the PYTHONPATH.
+pythonpath: "{{ project_root }}/"
+
+# the git repository URL for the project
+project_repo: git@github.com:myuser/django-myproject.git
+
+# a private key that has access to the repository URL
+ssh_private_key: ~/.ssh/id_rsa
+
+# The value of your django project's STATIC_ROOT settings.
+static_root: "{{ pythonpath }}/static"
+media_root: "{{ pythonpath }}/myproject/media"
+
+locale: en_US.UTF-8
+timezone: Europe/Berlin
+
+# database settings
+db_name: myproject_db
+db_user: myproject_user
+db_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          31396162396163353636306335646264663933326636303332373430373034393366373335623434
+          6565313832366432636630313539323066646537363638650a373935623030383137383738323363
+          31396237613936633032353638656562656632336439643538363735386136333136633363613538
+          6437613963663764320a333832346639383432343233313463333132386636323230613162323536
+          63633932613664356431313666623833653464613236646237623962626535306665
+
+domain_name: myproject.192.168.50.5.xip.io
+django_settings: myproject.settings.staging
+
+letsencrypt_email: ""
