@@ -2,6 +2,7 @@
 - hosts: servers
   vars_files:
     - vars.yml
+    - secrets.yml
   gather_facts: true
   become: yes
 
@@ -118,7 +119,7 @@
         - "{{ project_root }}/commands"
 
     - name: Save ssh key to server
-      copy: src={{ ssh_private_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
+      copy: src={{ ssh_github_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
 
     - name: Set directory permissions
       file:

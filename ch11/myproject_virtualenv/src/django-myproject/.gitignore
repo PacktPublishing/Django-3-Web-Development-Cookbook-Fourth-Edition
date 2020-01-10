@@ -51,3 +51,4 @@ venv/
 
 # Secrets
 secrets.json
+secrets.yml

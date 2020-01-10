@@ -2,6 +2,7 @@
 - hosts: servers
   vars_files:
     - vars.yml
+    - secrets.yml
   gather_facts: true
   become: yes
 
@@ -26,10 +27,12 @@
       notify:
         - restart gunicorn
 
-    - name: Copy secrets.json
+    - name: Copy secrets
       template:
-        src: ../../../myproject/settings/secrets.json
+        src: ../../ansible_templates/secrets.json.j2
         dest: "{{ project_root }}/src/{{ project_name }}/{{ project_name }}/settings/secrets.json"
+      notify:
+        - restart gunicorn
 
     - name: Django migrate
       django_manage:
