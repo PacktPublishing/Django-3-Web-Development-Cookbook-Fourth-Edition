@@ -10,10 +10,10 @@ install_root: /home
 project_root: "{{ install_root }}/{{ project_name }}"
 
 # the python module path to your project's wsgi file
-wsgi_module: config.wsgi
+wsgi_module: myproject.wsgi
 
 # any directories that need to be added to the PYTHONPATH.
-pythonpath: "{{ project_root }}/project/{{ project_name }}"
+pythonpath: "{{ project_root }}/src/{{ project_name }}"
 
 # the git repository URL for the project
 project_repo: git@github.com:archatas/django-myproject.git

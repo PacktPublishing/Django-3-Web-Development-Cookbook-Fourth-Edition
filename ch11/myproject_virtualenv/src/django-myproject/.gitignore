@@ -52,3 +52,6 @@ venv/
 # Secrets
 secrets.json
 secrets.yml
+
+# Vagrant / Ansible
+.vagrant
