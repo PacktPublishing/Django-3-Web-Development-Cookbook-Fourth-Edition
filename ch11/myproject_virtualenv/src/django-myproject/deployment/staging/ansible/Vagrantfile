@@ -17,7 +17,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.inventory_path = "./hosts/vagrant"
     ansible.host_key_checking = false
     ansible.verbose = "vv"
-    ansible.raw_arguments = "--vault-password-file=~/.vault_pass.txt"
     ansible.extra_vars = { ansible_python_interpreter: "/usr/bin/python3" }
   end
 end

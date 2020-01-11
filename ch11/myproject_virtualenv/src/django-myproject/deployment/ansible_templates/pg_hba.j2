@@ -1,2 +1,4 @@
-local   all     postgres                ident
-local   all     {{ project_name }}      md5
+# TYPE  DATABASE    USER        CIDR-ADDRESS    METHOD
+local   all         all                         ident
+host    all         all         ::0/0           md5
+host    all         all         0.0.0.0/32      md5

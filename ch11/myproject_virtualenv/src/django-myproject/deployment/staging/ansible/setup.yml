@@ -18,6 +18,11 @@
         line: '127.0.0.1 localhost {{ domain_name }} www.{{ domain_name }}'
         state: present
 
+    - name: Add Apt signing key for postgresql
+      apt_key:
+        id: 7FCC7D46ACCC4CF8
+        keyserver: keyserver.ubuntu.com
+
     - name: Install aptitude
       apt: pkg={{ item }} update-cache=yes
       with_items:
@@ -183,7 +188,7 @@
           file: name=/etc/nginx/ssl/ state=directory
 
         - name: Create self-signed SSL cert
-          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN=${ansible_fqdn}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
+          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
           notify: restart nginx
 
     - name: Copy Nginx config

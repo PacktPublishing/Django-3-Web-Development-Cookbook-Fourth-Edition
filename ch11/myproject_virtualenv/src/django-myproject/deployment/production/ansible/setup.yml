@@ -18,6 +18,11 @@
         line: '127.0.0.1 localhost {{ domain_name }} www.{{ domain_name }}'
         state: present
 
+    - name: Add Apt signing key for postgresql
+      apt_key:
+        id: 7FCC7D46ACCC4CF8
+        keyserver: keyserver.ubuntu.com
+
     - name: Install aptitude
       apt: pkg={{ item }} update-cache=yes
       with_items:
