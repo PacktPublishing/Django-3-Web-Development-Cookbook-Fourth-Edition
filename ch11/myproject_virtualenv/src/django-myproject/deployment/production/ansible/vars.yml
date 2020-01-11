@@ -25,7 +25,7 @@ media_root: "{{ pythonpath }}/media"
 locale: en_US.UTF-8
 timezone: Europe/Berlin
 
-domain_name: myproject.com
+domain_name: myproject.46.101.136.102.xip.io
 django_settings: myproject.settings.production
 
 # letsencrypt settings
