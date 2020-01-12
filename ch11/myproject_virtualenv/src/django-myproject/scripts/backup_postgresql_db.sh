@@ -1,54 +1,34 @@
 #!/usr/bin/env bash
 SECONDS=0
-export DJANGO_SETTINGS_MODULE=myproject.settings.production
 PROJECT_PATH=/home/myproject
-LOG_FILE=${PROJECT_PATH}/logs/backup_db.log
+REPOSITORY_PATH=${PROJECT_PATH}/src/myproject
+LOG_FILE=${PROJECT_PATH}/logs/backup_postgres_db.log
 DAY_OF_THE_WEEK=$(LC_ALL=en_US.UTF-8 date +"%w-%A")
-DAILY_BACKUP_PATH=${PROJECT_PATH}/db_backups/${DAY_OF_THE_WEEK}.sql
-LATEST_BACKUP_PATH=${PROJECT_PATH}/db_backups/latest.sql
+DAILY_BACKUP_PATH=${PROJECT_PATH}/db_backups/${DAY_OF_THE_WEEK}.backup
+LATEST_BACKUP_PATH=${PROJECT_PATH}/db_backups/latest.backup
 error_counter=0
 
 echoerr() { echo "$@" 1>&2; }
 
 cd ${PROJECT_PATH}
-source venv/bin/activate
-
-DATABASE=$(echo "from django.conf import settings; print(settings.DATABASES['default']['NAME'])" | python manage.py shell -i python)
-USER=$(echo "from django.conf import settings; print(settings.DATABASES['default']['USER'])" | python manage.py shell -i python)
-PASSWORD=$(echo "from django.conf import settings; print(settings.DATABASES['default']['PASSWORD'])" | python manage.py shell -i python)
-
 mkdir -p logs
 mkdir -p db_backups
+
+source venv/bin/activate
+cd ${REPOSITORY_PATH}
+
+DATABASE=$(echo "from django.conf import settings; print(settings.DATABASES['default']['NAME'])" | python manage.py shell -i python)
+
 
 echo "=== Creating DB Backup ===" > ${LOG_FILE}
 date >> ${LOG_FILE}
 
-EXCLUDED_TABLES=(
-django_session
-)
-
-IGNORED_TABLES_STRING=''
-for TABLE in "${EXCLUDED_TABLES[@]}"; do
-    IGNORED_TABLES_STRING+=" --ignore-table=${DATABASE}.${TABLE}"
-done
-
-echo "- Dump structure" >> ${LOG_FILE}
-mysqldump -u "${USER}" -p"${PASSWORD}" --single-transaction --no-data "${DATABASE}" > "${DAILY_BACKUP_PATH}" 2>> ${LOG_FILE}
+echo "- Dump database" >> ${LOG_FILE}
+pg_dump --format=p --file="${DAILY_BACKUP_PATH}" ${DATABASE}
 function_exit_code=$?
 if [[ $function_exit_code -ne 0 ]]; then
     {
-        echoerr "Command mysqldump for dumping database structure failed with exit code ($function_exit_code)."
-        error_counter=$((error_counter + 1))
-    } >> "${LOG_FILE}" 2>&1
-fi
-
-echo "- Dump content" >> ${LOG_FILE}
-# shellcheck disable=SC2086
-mysqldump -u "${USER}" -p"${PASSWORD}" "${DATABASE}" ${IGNORED_TABLES_STRING} >> "${DAILY_BACKUP_PATH}" 2>> ${LOG_FILE}
-function_exit_code=$?
-if [[ $function_exit_code -ne 0 ]]; then
-    {
-        echoerr "Command mysqldump for dumping database content failed with exit code ($function_exit_code)."
+        echoerr "Command pg_dump failed with exit code ($function_exit_code)."
         error_counter=$((error_counter + 1))
     } >> "${LOG_FILE}" 2>&1
 fi

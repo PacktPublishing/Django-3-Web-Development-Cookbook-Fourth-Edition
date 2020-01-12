@@ -1,0 +1,63 @@
+<VirtualHost *:80>
+    ServerName {{ domain_name }}
+    ServerAlias {{ domain_name }} www.{{ domain_name }}
+
+    DocumentRoot {{ project_root }}/public_html
+    DirectoryIndex index.html
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://www.{{ domain_name }}/$1 [R=301,L]
+</VirtualHost>
+
+<IfModule mod_ssl.c>
+    <VirtualHost *:443>
+        ServerName {{ domain_name }}
+        ServerAlias {{ domain_name }} www.{{ domain_name }}
+
+        DocumentRoot {{ project_root }}/public_html
+        DirectoryIndex index.html
+
+        SSLEngine on
+        SSLCertificateFile    /etc/ssl/certs/server.crt
+        SSLCertificateKeyFile /etc/ssl/private/server.key
+
+        RewriteEngine On
+        RewriteCond %{HTTP_HOST} !^www\. [NC]
+        RewriteRule ^(.*)$ https://www.{{ domain_name }}%{REQUEST_URI} [R=301,L]
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        AliasMatch ^/media/(.*) "{{ python_path }}/media/$1"
+        AliasMatch ^/static/\d+/(.*) "{{ python_path }}/static/$1"
+
+        <Directory "{{ python_path }}/media">
+            Require all granted
+            ExpiresActive On
+            ExpiresDefault "access plus 1 year"
+        </Directory>
+
+        <Directory "{{ python_path }}/static">
+            Require all granted
+            ExpiresActive On
+            ExpiresDefault "access plus 1 year"
+        </Directory>
+
+        <IfModule wsgi_module>
+            SetEnv DJANGO_SETTINGS_MODULE {{ django_settings }}
+            WSGIDaemonProcess {{ domain_name }} python-home={{ project_root }}/venv python-path={{ python_path }} processes=6 threads=1 request-timeout=1500 response-socket-timeout=15 display-name=%{GROUP} user={{ user_username }} group=webapps
+            WSGIProcessGroup {{ domain_name }}
+            WSGIScriptAlias / {{ python_path }}/myproject/wsgi.py process-group={{ domain_name }}
+            <Directory "{{ python_path }}/myproject/">
+                <Files wsgi.py>
+                    Require all granted
+                </Files>
+            </Directory>
+        </IfModule>
+
+    </VirtualHost>
+</IfModule>

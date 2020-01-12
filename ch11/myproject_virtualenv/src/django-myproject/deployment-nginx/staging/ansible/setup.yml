@@ -1,0 +1,251 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+    - secrets.yml
+  gather_facts: true
+  become: yes
+
+  tasks:
+    - name: Change hostname
+      hostname:
+        name: "{{ domain_name }}"
+
+    - name: Add host to /etc/hosts
+      lineinfile:
+        dest: /etc/hosts
+        regexp: '^127\.0\.0\.1[ \t]+localhost'
+        line: '127.0.0.1 localhost {{ domain_name }} www.{{ domain_name }}'
+        state: present
+
+    - name: Add Apt signing key for postgresql
+      apt_key:
+        id: 7FCC7D46ACCC4CF8
+        keyserver: keyserver.ubuntu.com
+
+    - name: Install aptitude
+      apt: pkg={{ item }} update-cache=yes
+      with_items:
+        - aptitude
+
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+
+    - name: Set locale
+      command: /usr/sbin/update-locale LANG={{ locale }} LC_ALL={{ locale }}
+
+    - name: Set /etc/localtime
+      file: src=/usr/share/zoneinfo/{{ timezone }} dest=/etc/localtime
+
+    - name: Set /etc/timezone
+      template: src=../../ansible_templates/timezone.j2 dest=/etc/timezone
+      notify: update tzdata
+
+    - name: Add apt repository for letsencrypt
+      apt_repository:
+        repo: 'ppa:certbot/certbot'
+        update-cache: yes
+
+    - name: Add apt repository for postgresql
+      apt_repository:
+        repo: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
+        update-cache: yes
+
+    - name: Install system packages
+      apt: pkg={{ item }} update-cache=yes
+      with_items:
+        - certbot
+        - git
+        - libmemcached-dev
+        - mailutils
+        - memcached
+        - nginx
+        - postfix
+        - postgresql-10
+        - postgresql-client-10
+        - postgresql-server-dev-10
+        - python-certbot-nginx
+        - python3-dev
+        - python3-pip
+        - python3-virtualenv
+        - redis-server
+        - ssl-cert
+        - tzdata
+        - unzip
+
+    - name: Upgrade pip
+      pip:
+        name: pip
+        executable: pip3
+        extra_args: --upgrade
+
+    - name: Install psycopg2
+      pip:
+        name: "{{ item }}"
+        executable: pip3
+      with_items:
+        - psycopg2==2.7.5
+        - psycopg2-binary==2.7.5
+
+    - name: Create main directory for the project
+      file:
+        path: "{{ project_root }}"
+        state: directory
+        mode: 0775
+
+    - name: Create Unix user group
+      group:
+        name: webapps
+        state: present
+
+    - name: Create Unix user
+      user:
+        name: "{{ user_username }}"
+        shell: /bin/bash
+        groups: webapps
+        home: "{{ project_root }}"
+
+    - name: Create inner directories for the project
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ project_name }}"
+        group: webapps
+        mode: 0775
+      with_items:
+        - "{{ project_root }}/.ssh"
+        - "{{ project_root }}/src"
+        - "{{ project_root }}/db_backups"
+        - "{{ project_root }}/logs"
+        - "{{ project_root }}/commands"
+
+    - name: Save ssh key to server
+      copy: src={{ ssh_github_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
+
+    - name: Set directory permissions
+      file:
+        dest: "{{ project_root }}"
+        owner: "{{ project_name }}"
+        group: users
+        recurse: yes
+
+    - name: Create virtual environment
+      become: yes
+      become_user: "{{ user_username }}"
+      command: python3 -m virtualenv {{ project_root }}/venv/ --python=python3
+      args:
+        creates: "{{ project_root }}/venv/bin/python"
+
+    - name: Always activate virtual environment for {{ project_name }} user
+      lineinfile:
+        path: "{{ project_root }}/.bash_profile"
+        state: present
+        create: yes
+        line: "source {{ project_root }}/venv/bin/activate"
+
+    - name: Copy PostgreSQL authentication configuration
+      template:
+        src: ../../ansible_templates/pg_hba.j2
+        dest: /etc/postgresql/10/main/pg_hba.conf
+      notify:
+        - restart postgresql
+
+    - name: Copy PostgreSQL main configuration
+      template:
+        src: ../../ansible_templates/postgresql.j2
+        dest: /etc/postgresql/10/main/postgresql.conf
+      notify:
+        - restart postgresql
+
+    - name: Make sure PostgreSQL server is running
+      service: name=postgresql state=started
+
+    - name: Create database user
+      become_user: postgres
+      postgresql_user: name={{ db_user }} password={{ db_password }} role_attr_flags=CREATEDB,LOGIN encrypted=yes
+
+    - name: Create database
+      become_user: postgres
+      postgresql_db: name={{ db_name }} owner={{ db_user }}
+
+    - name: Remove default Nginx site
+      file: path=/etc/nginx/sites-enabled/default state=absent
+
+    - name: Prepare nginx configuration
+      block:
+        - name: Remove default Nginx site
+          file: path=/etc/nginx/sites-enabled/default state=absent
+          notify:
+            - restart nginx
+
+        - name: Copy Nginx-Pre config
+          template:
+            src: ../../ansible_templates/nginx-pre.j2
+            dest: /etc/nginx/sites-available/{{ project_name }}.conf
+          notify:
+            - restart nginx
+
+        - name: Create website configuration symlink
+          file:
+            src: /etc/nginx/sites-available/{{ project_name }}.conf
+            dest: /etc/nginx/sites-enabled/{{ project_name }}.conf
+            state: link
+          notify:
+            - restart nginx
+
+    - name: Install self-signed SSL certificate
+      block:
+        - name: Create ssl certificate directory
+          file: name=/etc/nginx/ssl/ state=directory
+
+        - name: Create self-signed SSL cert
+          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
+          notify: restart nginx
+
+    - name: Copy Nginx config
+      template:
+        src: ../../ansible_templates/nginx.j2
+        dest: /etc/nginx/sites-available/{{ project_name }}.conf
+      notify:
+        - restart nginx
+
+    - name: Copy memcached config
+      template: src=../../ansible_templates/memcached.j2 dest=/etc/memcached.conf
+      notify:
+      - restart memcached
+
+    - name: Copy postfix config
+      template: src=../../ansible_templates/postfix.j2 dest=/etc/postfix/main.cf
+      notify:
+      - restart postfix
+
+    - name: Copy postfix forwarding config
+      template: src=../../ansible_templates/virtual.j2 dest=/etc/postfix/virtual
+      notify:
+      - activate postfix forwarding
+
+
+  handlers:
+    - name: restart postgresql
+      service: name=postgresql state=restarted
+
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+    - name: restart memcached
+      service: name=memcached state=restarted
+
+    - name: restart postfix
+      service: name=postfix state=restarted
+
+    - name: activate postfix forwarding
+      command: postmap /etc/postfix/virtual
+
+    - name: update tzdata
+      command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
+
+- import_playbook: deploy.yml

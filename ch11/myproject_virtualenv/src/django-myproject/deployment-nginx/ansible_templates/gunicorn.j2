@@ -1,0 +1,18 @@
+[Unit]
+Description=Gunicorn daemon for myproject website
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+Type=simple
+User={{ user_username }}
+Group=www-data
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ python_path }}
+ExecStart={{ project_root }}/venv/bin/gunicorn --pid /run/gunicorn/pid --log-file={{ project_root }}/logs/gunicorn.log --workers {{ ansible_processor_count | int }} --bind 127.0.0.1:8000 {{ project_name }}.wsgi:application --env DJANGO_SETTINGS_MODULE={{ django_settings }} --max-requests 1000
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

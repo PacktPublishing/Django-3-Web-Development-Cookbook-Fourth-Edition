@@ -1,0 +1,22 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box_version = "201912.14.0"
+  config.vm.box_check_update = false
+  config.ssh.insert_key=false
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    v.cpus = 1
+    v.name = "myproject"
+  end
+  config.vm.network "private_network", ip: "192.168.50.5"
+  config.vm.provision "ansible" do |ansible|
+    ansible.limit = "all"
+    ansible.playbook = "setup.yml"
+    ansible.inventory_path = "./hosts/vagrant"
+    ansible.host_key_checking = false
+    ansible.verbose = "vv"
+    ansible.extra_vars = { ansible_python_interpreter: "/usr/bin/python3" }
+  end
+end

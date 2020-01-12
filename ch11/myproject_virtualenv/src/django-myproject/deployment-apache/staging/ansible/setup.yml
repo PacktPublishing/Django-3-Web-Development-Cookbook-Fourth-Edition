@@ -58,17 +58,17 @@
     - name: Install system packages
       apt: pkg={{ item }} update-cache=yes
       with_items:
+        - apache2
         - certbot
         - git
+        - libapache2-mod-wsgi-py3
         - libmemcached-dev
         - mailutils
         - memcached
-        - nginx
         - postfix
         - postgresql-10
         - postgresql-client-10
         - postgresql-server-dev-10
-        - python-certbot-nginx
         - python3-dev
         - python3-pip
         - python3-virtualenv
@@ -90,6 +90,7 @@
       with_items:
         - psycopg2==2.7.5
         - psycopg2-binary==2.7.5
+        - PyOpenSSL>=19.0
 
     - name: Create main directory for the project
       file:
@@ -122,6 +123,8 @@
         - "{{ project_root }}/db_backups"
         - "{{ project_root }}/logs"
         - "{{ project_root }}/commands"
+        - "{{ project_root }}/public_html"
+        - "{{ project_root }}/public_html/.well-known"
 
     - name: Save ssh key to server
       copy: src={{ ssh_github_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
@@ -172,31 +175,42 @@
       become_user: postgres
       postgresql_db: name={{ db_name }} owner={{ db_user }}
 
-    - name: Remove default Nginx site
-      file: path=/etc/nginx/sites-enabled/default state=absent
+    - name: Enable required apache modules
+      apache2_module:
+        state: present
+        name: "{{ item }}"
+      with_items:
+        - alias
+        - expires
+        - rewrite
+        - ssl
+        - wsgi
 
-    - name: Copy Nginx-Pre config
-      template:
-        src: ../../ansible_templates/nginx-pre.j2
-        dest: /etc/nginx/sites-enabled/{{ project_name }}.conf
-      notify:
-        - restart nginx
+    - name: Prepare apache configuration
+      block:
+        - name: Remove default apache site
+          file: path=/etc/apache2/sites-enabled/000-default.conf state=absent
+          notify:
+            - restart apache
+
+        - name: Copy Apache-Pre config
+          template:
+            src: ../../ansible_templates/apache_site-pre.conf.j2
+            dest: /etc/apache2/sites-available/{{ project_name }}.conf
+
+        - name: Create website configuration symlink
+          file:
+            src: /etc/apache2/sites-available/{{ project_name }}.conf
+            dest: /etc/apache2/sites-enabled/{{ project_name }}.conf
+            state: link
+          notify:
+            - restart apache
 
     - name: Install self-signed SSL certificate
       block:
-        - name: Create letsencrypt directory
-          file: name=/etc/nginx/ssl/ state=directory
-
         - name: Create self-signed SSL cert
-          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 3650 -keyout /etc/nginx/ssl/server.key -out /etc/nginx/ssl/server.crt -extensions v3_ca creates=/etc/nginx/ssl/server.crt
-          notify: restart nginx
-
-    - name: Copy Nginx config
-      template:
-        src: ../../ansible_templates/nginx.j2
-        dest: /etc/nginx/sites-enabled/{{ project_name }}.conf
-      notify:
-        - restart nginx
+          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 365 -keyout /etc/ssl/private/server.key -out /etc/ssl/certs/server.crt -extensions v3_ca creates=/etc/ssl/certs/server.crt
+          notify: restart apache
 
     - name: Copy memcached config
       template: src=../../ansible_templates/memcached.j2 dest=/etc/memcached.conf
@@ -218,8 +232,8 @@
     - name: restart postgresql
       service: name=postgresql state=restarted
 
-    - name: restart nginx
-      service: name=nginx state=restarted
+    - name: restart apache
+      service: name=apache2 state=restarted
 
     - name: restart memcached
       service: name=memcached state=restarted

@@ -1,0 +1,80 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+    - secrets.yml
+  gather_facts: true
+  become: yes
+
+  tasks:
+    - name: Clone/pull project repo
+      git:
+        repo: "{{ project_repo }}"
+        dest: "{{ project_root }}/src/{{ project_name }}"
+        accept_hostkey: yes
+      become: yes
+      become_user: "{{ user_username }}"
+      notify:
+        - restart gunicorn
+
+    - name: Install python packages
+      pip:
+        requirements: "{{ project_root }}/src/{{ project_name }}/requirements/production.txt"
+        virtualenv: "{{ project_root }}/venv"
+        virtualenv_site_packages: yes
+      become: yes
+      become_user: "{{ user_username }}"
+      notify:
+        - restart gunicorn
+
+    - name: Copy secrets
+      template:
+        src: ../../ansible_templates/secrets.json.j2
+        dest: "{{ project_root }}/src/{{ project_name }}/{{ project_name }}/settings/secrets.json"
+      notify:
+        - restart gunicorn
+
+    - name: Django migrate
+      django_manage:
+        command: migrate
+        app_path: "{{ project_root }}/src/{{ project_name }}"
+        pythonpath: "{{ python_path }}"
+        settings: "{{ django_settings }}"
+        virtualenv: "{{ project_root }}/venv/"
+      become: yes
+      become_user: "{{ user_username }}"
+
+    - name: Django collectstatic
+      django_manage:
+        command: collectstatic
+        app_path: "{{ project_root }}/src/{{ project_name }}"
+        pythonpath: "{{ python_path }}"
+        settings: "{{ django_settings }}"
+        virtualenv: "{{ project_root }}/venv/"
+      become: yes
+      become_user: "{{ user_username }}"
+
+    - name: Copy Gunicorn config for myproject website
+      template: src=../../ansible_templates/gunicorn.j2 dest=/etc/systemd/system/gunicorn.service mode=0744
+      notify:
+        - restart gunicorn
+
+    - name: Make sure Gunicorn server is running and enabled to survive reboot
+      service: name=gunicorn.service state=started enabled=yes daemon_reload=yes
+
+    - name: Restart gunicorn for start page
+      command: /bin/true
+      notify: restart gunicorn
+
+    - name: Make sure that Redis is running and is enabled to survive reboot
+      service: name=redis-server state=started enabled=yes
+
+    - name: Make sure Nginx server is running and enabled to survive reboot
+      service: name=nginx state=started enabled=yes
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+
+    - name: restart gunicorn
+      service: name=gunicorn.service state=restarted

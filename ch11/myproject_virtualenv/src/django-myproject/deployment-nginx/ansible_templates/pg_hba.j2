@@ -1,0 +1,5 @@
+# TYPE  DATABASE        USER            CIDR-ADDRESS    METHOD
+local   all             all                             ident
+host    all             all             ::0/0           md5
+host    all             all             0.0.0.0/32      md5
+host    {{ db_name }}   {{ db_user }}   127.0.0.1/32    md5

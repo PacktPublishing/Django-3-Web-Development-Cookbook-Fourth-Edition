@@ -1,0 +1,32 @@
+---
+# a unix path-friendly name (IE, no spaces or special characters)
+project_name: myproject
+
+user_username: "{{ project_name }}"
+
+# the base path to install to. You should not need to change this.
+install_root: /home
+
+project_root: "{{ install_root }}/{{ project_name }}"
+
+# the python module path to your project's wsgi file
+wsgi_module: myproject.wsgi
+
+# any directories that need to be added to the PYTHONPATH.
+python_path: "{{ project_root }}/src/{{ project_name }}"
+
+# the git repository URL for the project
+project_repo: git@github.com:archatas/django-myproject.git
+
+# The value of your django project's STATIC_ROOT settings.
+static_root: "{{ python_path }}/static"
+media_root: "{{ python_path }}/media"
+
+locale: en_US.UTF-8
+timezone: Europe/Berlin
+
+domain_name: myproject.46.101.136.102.xip.io
+django_settings: myproject.settings.production
+
+# letsencrypt settings
+letsencrypt_email: hello@myproject.com

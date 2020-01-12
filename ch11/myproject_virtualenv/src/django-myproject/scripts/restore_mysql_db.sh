@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 SECONDS=0
 PROJECT_PATH=/home/myproject
+REPOSITORY_PATH=${PROJECT_PATH}/src/myproject
 LATEST_BACKUP_PATH=${PROJECT_PATH}/db_backups/latest.sql
 export DJANGO_SETTINGS_MODULE=myproject.settings.production
 
@@ -10,7 +11,7 @@ source venv/bin/activate
 echo "=== Restoring DB from a Backup ==="
 
 echo "- Fill the database with schema and data"
-cd "${PROJECT_PATH}" || exit 1
+cd "${REPOSITORY_PATH}"
 gzcat "${LATEST_BACKUP_PATH}.gz" | python manage.py dbshell
 
 duration=$SECONDS

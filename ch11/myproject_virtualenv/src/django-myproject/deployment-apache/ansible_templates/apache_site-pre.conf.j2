@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+    ServerName {{ domain_name }}
+    ServerAlias {{ domain_name }} www.{{ domain_name }}
+
+    DocumentRoot {{ project_root }}/public_html
+    DirectoryIndex index.html
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <Directory "/">
+        Require all granted
+    </Directory>
+</VirtualHost>
