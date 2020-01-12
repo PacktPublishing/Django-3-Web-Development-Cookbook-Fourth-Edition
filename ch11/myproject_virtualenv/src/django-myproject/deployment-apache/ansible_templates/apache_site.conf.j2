@@ -22,8 +22,14 @@
         DirectoryIndex index.html
 
         SSLEngine on
+        {% if letsencrypt_email %}
+        SSLCertificateFile /etc/letsencrypt/live/{{ domain_name }}/cert.pem
+        SSLCertificateKeyFile /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+        SSLCertificateChainFile /etc/letsencrypt/live/{{ domain_name }}/chain.pem
+        {% else %}
         SSLCertificateFile    /etc/ssl/certs/server.crt
         SSLCertificateKeyFile /etc/ssl/private/server.key
+        {% endif %}
 
         RewriteEngine On
         RewriteCond %{HTTP_HOST} !^www\. [NC]
@@ -32,8 +38,13 @@
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 
+        AliasMatch ^/.well-known/(.*) "/var/www/letsencrypt/$1"
         AliasMatch ^/media/(.*) "{{ python_path }}/media/$1"
         AliasMatch ^/static/\d+/(.*) "{{ python_path }}/static/$1"
+
+        <Directory "/var/www/letsencrypt">
+            Require all granted
+        </Directory>
 
         <Directory "{{ python_path }}/media">
             Require all granted
@@ -48,12 +59,11 @@
         </Directory>
 
         <IfModule wsgi_module>
-            SetEnv DJANGO_SETTINGS_MODULE {{ django_settings }}
             WSGIDaemonProcess {{ domain_name }} python-home={{ project_root }}/venv python-path={{ python_path }} processes=6 threads=1 request-timeout=1500 response-socket-timeout=15 display-name=%{GROUP} user={{ user_username }} group=webapps
             WSGIProcessGroup {{ domain_name }}
-            WSGIScriptAlias / {{ python_path }}/myproject/wsgi.py process-group={{ domain_name }}
+            WSGIScriptAlias / {{ python_path }}/myproject/{{ wsgi_file_name }} process-group={{ domain_name }}
             <Directory "{{ python_path }}/myproject/">
-                <Files wsgi.py>
+                <Files {{ wsgi_file_name }}>
                     Require all granted
                 </Files>
             </Directory>

@@ -1,5 +1,5 @@
 [servers]
-myproject-nginx
+myproject-apache
 
 [servers:vars]
 ansible_python_interpreter=/usr/bin/python3

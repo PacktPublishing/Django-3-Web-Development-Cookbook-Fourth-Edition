@@ -7,6 +7,11 @@
   become: yes
 
   tasks:
+    - name: Copy Apache-Pre config
+      template:
+        src: ../../ansible_templates/apache_site-pre.conf.j2
+        dest: /etc/apache2/sites-available/{{ project_name }}.conf
+
     - name: Clone/pull project repo
       git:
         repo: "{{ project_repo }}"
@@ -15,7 +20,7 @@
       become: yes
       become_user: "{{ user_username }}"
       notify:
-        - restart gunicorn
+        - restart apache
 
     - name: Install python packages
       pip:
@@ -25,14 +30,14 @@
       become: yes
       become_user: "{{ user_username }}"
       notify:
-        - restart gunicorn
+        - restart apache
 
     - name: Copy secrets
       template:
         src: ../../ansible_templates/secrets.json.j2
         dest: "{{ project_root }}/src/{{ project_name }}/{{ project_name }}/settings/secrets.json"
       notify:
-        - restart gunicorn
+        - restart apache
 
     - name: Django migrate
       django_manage:
@@ -54,27 +59,19 @@
       become: yes
       become_user: "{{ user_username }}"
 
-    - name: Copy Gunicorn config for myproject website
-      template: src=../../ansible_templates/gunicorn.j2 dest=/etc/systemd/system/gunicorn.service mode=0744
+    - name: Copy apache config
+      template:
+        src: ../../ansible_templates/apache_site.conf.j2
+        dest: /etc/apache2/sites-available/{{ project_name }}.conf
       notify:
-        - restart gunicorn
+        - restart apache
 
-    - name: Make sure Gunicorn server is running and enabled to survive reboot
-      service: name=gunicorn.service state=started enabled=yes daemon_reload=yes
-
-    - name: Restart gunicorn for start page
-      command: /bin/true
-      notify: restart gunicorn
+    - name: Make sure Apache server is running and enabled to survive reboot
+      service: name=apache2 state=started enabled=yes daemon_reload=yes
 
     - name: Make sure that Redis is running and is enabled to survive reboot
       service: name=redis-server state=started enabled=yes
 
-    - name: Make sure Nginx server is running and enabled to survive reboot
-      service: name=nginx state=started enabled=yes
-
   handlers:
-    - name: restart nginx
-      service: name=nginx state=restarted
-
-    - name: restart gunicorn
-      service: name=gunicorn.service state=restarted
+    - name: restart apache
+      service: name=apache2 state=restarted

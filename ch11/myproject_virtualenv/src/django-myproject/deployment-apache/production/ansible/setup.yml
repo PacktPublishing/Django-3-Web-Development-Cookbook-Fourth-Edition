@@ -58,22 +58,22 @@
     - name: Install system packages
       apt: pkg={{ item }} update-cache=yes
       with_items:
+        - apache2
         - certbot
         - git
+        - libapache2-mod-wsgi-py3
         - libmemcached-dev
         - mailutils
         - memcached
-        - nginx
         - postfix
         - postgresql-10
         - postgresql-client-10
         - postgresql-server-dev-10
-        - python-certbot-nginx
+        - python-certbot-apache
         - python3-dev
         - python3-pip
         - python3-virtualenv
         - redis-server
-        - ssl-cert
         - tzdata
         - unzip
 
@@ -83,7 +83,7 @@
         executable: pip3
         extra_args: --upgrade
 
-    - name: Install psycopg2
+    - name: Install python dependencies
       pip:
         name: "{{ item }}"
         executable: pip3
@@ -122,6 +122,7 @@
         - "{{ project_root }}/db_backups"
         - "{{ project_root }}/logs"
         - "{{ project_root }}/commands"
+        - "{{ project_root }}/public_html"
 
     - name: Save ssh key to server
       copy: src={{ ssh_github_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
@@ -179,27 +180,36 @@
       become_user: postgres
       postgresql_db: name={{ db_name }} owner={{ db_user }}
 
-    - name: Prepare nginx
-      block:
-        - name: Remove default Nginx site
-          file: path=/etc/nginx/sites-enabled/default state=absent
-          notify:
-            - restart nginx
+    - name: Enable required apache modules
+      apache2_module:
+        state: present
+        name: "{{ item }}"
+      with_items:
+        - alias
+        - expires
+        - rewrite
+        - ssl
+        - wsgi
 
-        - name: Copy Nginx-Pre config
-          template:
-            src: ../../ansible_templates/nginx-pre.j2
-            dest: /etc/nginx/sites-available/{{ project_name }}.conf
+    - name: Prepare apache configuration
+      block:
+        - name: Remove default apache site
+          file: path=/etc/apache2/sites-enabled/000-default.conf state=absent
           notify:
-            - restart nginx
+            - restart apache
+
+        - name: Copy Apache-Pre config
+          template:
+            src: ../../ansible_templates/apache_site-pre.conf.j2
+            dest: /etc/apache2/sites-available/{{ project_name }}.conf
 
         - name: Create website configuration symlink
           file:
-            src: /etc/nginx/sites-available/{{ project_name }}.conf
-            dest: /etc/nginx/sites-enabled/{{ project_name }}.conf
+            src: /etc/apache2/sites-available/{{ project_name }}.conf
+            dest: /etc/apache2/sites-enabled/{{ project_name }}.conf
             state: link
           notify:
-            - restart nginx
+            - restart apache
 
     - name: Install Letsencrypt SSL certificate
       block:
@@ -207,7 +217,7 @@
           file: name=/var/www/letsencrypt state=directory
 
         - name: Create letsencrypt certificate
-          shell: certbot certonly -n --nginx -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos --no-verify-ssl -d {{ domain_name }} -d www.{{ domain_name }}
+          shell: certbot certonly -n --apache -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos --no-verify-ssl -d {{ domain_name }} -d www.{{ domain_name }}
           args:
             creates: /etc/letsencrypt/live/{{ domain_name }}
 
@@ -216,23 +226,11 @@
             name: SHELL
             value: /bin/bash
 
-        - name: Make sure that nginx is findable in the crontab
-          cronvar:
-            name: PATH
-            value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
         - name: Add letsencrypt cronjob for cert renewal
           cron:
             name: letsencrypt_renewal
             special_time: weekly
-            job: certbot --renew-by-default certonly -n --nginx -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }} && service nginx reload
-
-    - name: Copy Nginx config
-      template:
-        src: ../../ansible_templates/nginx.j2
-        dest: /etc/nginx/sites-available/{{ project_name }}.conf
-      notify:
-        - restart nginx
+            job: certbot --renew-by-default certonly -n --apache -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} -d www.{{ domain_name }} && service apache2 reload
 
     - name: Copy memcached config
       template: src=../../ansible_templates/memcached.j2 dest=/etc/memcached.conf
@@ -254,8 +252,8 @@
     - name: restart postgresql
       service: name=postgresql state=restarted
 
-    - name: restart nginx
-      service: name=nginx state=restarted
+    - name: restart apache
+      service: name=apache2 state=restarted
 
     - name: restart memcached
       service: name=memcached state=restarted

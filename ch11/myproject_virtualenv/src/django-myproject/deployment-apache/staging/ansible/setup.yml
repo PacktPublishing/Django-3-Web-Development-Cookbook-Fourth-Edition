@@ -83,7 +83,7 @@
         executable: pip3
         extra_args: --upgrade
 
-    - name: Install psycopg2
+    - name: Install python dependencies
       pip:
         name: "{{ item }}"
         executable: pip3
@@ -124,7 +124,6 @@
         - "{{ project_root }}/logs"
         - "{{ project_root }}/commands"
         - "{{ project_root }}/public_html"
-        - "{{ project_root }}/public_html/.well-known"
 
     - name: Save ssh key to server
       copy: src={{ ssh_github_key }} dest={{ project_root }}/.ssh/id_rsa mode=600
@@ -149,6 +148,13 @@
         state: present
         create: yes
         line: "source {{ project_root }}/venv/bin/activate"
+
+    - name: Set the DJANGO_SETTINGS_MODULE
+      lineinfile:
+        path: "{{ project_root }}/.bash_profile"
+        state: present
+        create: yes
+        line: "export DJANGO_SETTINGS_MODULE=myproject.settings.production"
 
     - name: Copy PostgreSQL authentication configuration
       template:
@@ -207,10 +213,8 @@
             - restart apache
 
     - name: Install self-signed SSL certificate
-      block:
-        - name: Create self-signed SSL cert
-          command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 365 -keyout /etc/ssl/private/server.key -out /etc/ssl/certs/server.crt -extensions v3_ca creates=/etc/ssl/certs/server.crt
-          notify: restart apache
+      command: openssl req -new -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=IT/CN={{ domain_name }}" -days 365 -keyout /etc/ssl/private/server.key -out /etc/ssl/certs/server.crt -extensions v3_ca creates=/etc/ssl/certs/server.crt
+      notify: restart apache
 
     - name: Copy memcached config
       template: src=../../ansible_templates/memcached.j2 dest=/etc/memcached.conf

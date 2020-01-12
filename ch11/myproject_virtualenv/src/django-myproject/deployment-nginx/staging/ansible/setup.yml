@@ -147,6 +147,13 @@
         create: yes
         line: "source {{ project_root }}/venv/bin/activate"
 
+    - name: Set the DJANGO_SETTINGS_MODULE
+      lineinfile:
+        path: "{{ project_root }}/.bash_profile"
+        state: present
+        create: yes
+        line: "export DJANGO_SETTINGS_MODULE=myproject.settings.production"
+
     - name: Copy PostgreSQL authentication configuration
       template:
         src: ../../ansible_templates/pg_hba.j2
