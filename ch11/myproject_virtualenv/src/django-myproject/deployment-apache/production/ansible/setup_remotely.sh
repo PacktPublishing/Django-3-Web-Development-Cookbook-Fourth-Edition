@@ -3,4 +3,4 @@ echo "=== Setting up the production server ==="
 date
 
 cd "$(dirname "$0")"
-ansible-playbook setup.yml -i hosts/remote --vault-password-file=~/.vault_pass.txt
+ansible-playbook setup.yml -i hosts/remote

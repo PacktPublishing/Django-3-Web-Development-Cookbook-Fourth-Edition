@@ -80,7 +80,7 @@ class LiveLocationTest(LiveServerTestCase):
         password_field = self.browser.find_element_by_id("id_password")
         password_field.send_keys(self.password)
         self.browser.find_element_by_css_selector('input[type="submit"]').click()
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, timeout=10).until(
             lambda x: self.browser.find_element_by_css_selector(".like-button")
         )
         # click on the "like" button
@@ -96,7 +96,7 @@ class LiveLocationTest(LiveServerTestCase):
         self.wait_a_little()
 
         like_button.click()
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, timeout=10).until(
             lambda x: int(self.browser.find_element_by_css_selector(".like-badge").text)
             != initial_likes
         )
@@ -116,7 +116,7 @@ class LiveLocationTest(LiveServerTestCase):
 
         # click on the "like" button again to switch back to the previous state
         like_button.click()
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, timeout=10).until(
             lambda x: int(self.browser.find_element_by_css_selector(".like-badge").text)
             == initial_likes
         )
