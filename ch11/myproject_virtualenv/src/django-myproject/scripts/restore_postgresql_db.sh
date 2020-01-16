@@ -17,12 +17,12 @@ PASSWORD=$(echo "from django.conf import settings; print(settings.DATABASES['def
 echo "=== Restoring DB from a Backup ==="
 
 echo "- Recreate the database"
-psql --username=pgsql --dbname=$DATABASE --command='SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid();'
-dropdb --username=pgsql $DATABASE
+psql --dbname=$DATABASE --command='SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE datname = current_database() AND pid <> pg_backend_pid();'
+dropdb $DATABASE
 createdb --username=$USER $DATABASE
 
 echo "- Fill the database with schema and data"
-gzcat "${LATEST_BACKUP_PATH}.gz" | python manage.py dbshell
+zcat "${LATEST_BACKUP_PATH}.gz" | python manage.py dbshell
 
 duration=$SECONDS
 echo "------------------------------------------"
