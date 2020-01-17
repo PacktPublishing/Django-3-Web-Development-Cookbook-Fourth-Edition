@@ -43,7 +43,7 @@ if [[ $function_exit_code -ne 0 ]]; then
     } >> "${LOG_FILE}" 2>&1
 fi
 
-echo "- Create a symlink latest.gz" >> ${LOG_FILE}
+echo "- Create a symlink latest.backup.gz" >> ${LOG_FILE}
 if [ -e "${LATEST_BACKUP_PATH}.gz" ]; then
     rm "${LATEST_BACKUP_PATH}.gz"
 fi

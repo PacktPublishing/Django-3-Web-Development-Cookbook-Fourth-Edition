@@ -3,7 +3,7 @@ SECONDS=0
 export DJANGO_SETTINGS_MODULE=myproject.settings.production
 PROJECT_PATH=/home/myproject
 REPOSITORY_PATH=${PROJECT_PATH}/src/myproject
-LOG_FILE=${PROJECT_PATH}/logs/backup_db.log
+LOG_FILE=${PROJECT_PATH}/logs/backup_mysql_db.log
 DAY_OF_THE_WEEK=$(LC_ALL=en_US.UTF-8 date +"%w-%A")
 DAILY_BACKUP_PATH=${PROJECT_PATH}/db_backups/${DAY_OF_THE_WEEK}.sql
 LATEST_BACKUP_PATH=${PROJECT_PATH}/db_backups/latest.sql
@@ -65,7 +65,7 @@ if [[ $function_exit_code -ne 0 ]]; then
     } >> "${LOG_FILE}" 2>&1
 fi
 
-echo "- Create a symlink latest.gz" >> ${LOG_FILE}
+echo "- Create a symlink latest.sql.gz" >> ${LOG_FILE}
 if [ -e "${LATEST_BACKUP_PATH}.gz" ]; then
     rm "${LATEST_BACKUP_PATH}.gz"
 fi

@@ -12,7 +12,7 @@ echo "=== Restoring DB from a Backup ==="
 
 echo "- Fill the database with schema and data"
 cd "${REPOSITORY_PATH}"
-gzcat "${LATEST_BACKUP_PATH}.gz" | python manage.py dbshell
+zcat "${LATEST_BACKUP_PATH}.gz" | python manage.py dbshell
 
 duration=$SECONDS
 echo "------------------------------------------"
