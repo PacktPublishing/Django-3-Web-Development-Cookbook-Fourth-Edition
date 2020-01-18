@@ -3,11 +3,11 @@ certifi==2019.9.11
 chardet==3.0.4
 coverage==4.5.3
 defusedxml==0.6.0
-Django~=3.0.0
+Django==3.0.2
 django-admin-honeypot==1.1.0
 django-appconf==1.0.3
 django-crispy-forms==1.8.1
--e git+https://github.com/mozilla/django-csp.git@ad277563da92af3b7fdda45dd2da51b65e8dd560#egg=django_csp
+django-csp==3.6
 django-imagekit==4.0.2
 django-redis-cache==2.1.0
 ecdsa==0.14.1
