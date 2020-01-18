@@ -33,9 +33,6 @@
                         </a>
                     {% endfor %}
                     {% if page_obj.has_next %}
-                        <div class="text-center">
-                            <div class="loading-indicator"></div>
-                        </div>
                         <p class="pagination">
                             <a class="next-page"
                                href="{% modify_query page=page_obj.next_page_number %}">
