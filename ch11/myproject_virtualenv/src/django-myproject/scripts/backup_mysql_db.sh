@@ -15,7 +15,7 @@ cd ${PROJECT_PATH}
 mkdir -p logs
 mkdir -p db_backups
 
-source venv/bin/activate
+source env/bin/activate
 cd ${REPOSITORY_PATH}
 
 DATABASE=$(echo "from django.conf import settings; print(settings.DATABASES['default']['NAME'])" | python manage.py shell -i python)

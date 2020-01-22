@@ -6,7 +6,7 @@ LATEST_BACKUP_PATH=${PROJECT_PATH}/db_backups/latest.backup
 export DJANGO_SETTINGS_MODULE=myproject.settings.production
 
 cd "${PROJECT_PATH}"
-source venv/bin/activate
+source env/bin/activate
 
 cd "${REPOSITORY_PATH}"
 

@@ -59,7 +59,7 @@
         </Directory>
 
         <IfModule wsgi_module>
-            WSGIDaemonProcess {{ domain_name }} python-home={{ project_root }}/venv python-path={{ python_path }} processes=6 threads=1 request-timeout=1500 response-socket-timeout=15 display-name=%{GROUP} user={{ user_username }} group=webapps
+            WSGIDaemonProcess {{ domain_name }} python-home={{ project_root }}/env python-path={{ python_path }} processes=6 threads=1 request-timeout=1500 response-socket-timeout=15 display-name=%{GROUP} user={{ user_username }} group=webapps
             WSGIProcessGroup {{ domain_name }}
             WSGIScriptAlias / {{ python_path }}/myproject/{{ wsgi_file_name }} process-group={{ domain_name }}
             <Directory "{{ python_path }}/myproject/">

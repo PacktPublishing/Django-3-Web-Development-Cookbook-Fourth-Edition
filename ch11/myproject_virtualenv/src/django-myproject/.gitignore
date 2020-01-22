@@ -37,7 +37,7 @@ profile_default/
 ipython_config.py
 
 # Environments
-venv/
+env/
 
 # Media and Static directories
 /media/

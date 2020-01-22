@@ -72,7 +72,7 @@
         - python-certbot-apache
         - python3-dev
         - python3-pip
-        - python3-virtualenv
+        - python3-venv
         - redis-server
         - tzdata
         - unzip
@@ -137,16 +137,16 @@
     - name: Create virtual environment
       become: yes
       become_user: "{{ user_username }}"
-      command: python3 -m virtualenv {{ project_root }}/venv/ --python=python3
+      command: python3 -m venv {{ project_root }}/env/
       args:
-        creates: "{{ project_root }}/venv/bin/python"
+        creates: "{{ project_root }}/env/bin/python"
 
     - name: Always activate virtual environment for {{ project_name }} user
       lineinfile:
         path: "{{ project_root }}/.bash_profile"
         state: present
         create: yes
-        line: "source {{ project_root }}/venv/bin/activate"
+        line: "source {{ project_root }}/env/bin/activate"
 
     - name: Set the DJANGO_SETTINGS_MODULE
       lineinfile:

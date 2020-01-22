@@ -1,6 +1,6 @@
 MAILTO=""
 HOME=/home/myproject
-PATH=/home/myproject/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PATH=/home/myproject/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 SHELL=/bin/bash
 00 01 * * * /home/myproject/commands/clear_sessions.sh
 00 02 * * * /home/myproject/commands/backup_postgresql_db.sh

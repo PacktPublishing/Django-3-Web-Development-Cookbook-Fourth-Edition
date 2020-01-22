@@ -25,7 +25,7 @@
     - name: Install python packages
       pip:
         requirements: "{{ project_root }}/src/{{ project_name }}/requirements/production.txt"
-        virtualenv: "{{ project_root }}/venv"
+        virtualenv: "{{ project_root }}/env"
         virtualenv_site_packages: yes
       become: yes
       become_user: "{{ user_username }}"
@@ -45,7 +45,7 @@
         app_path: "{{ project_root }}/src/{{ project_name }}"
         pythonpath: "{{ python_path }}"
         settings: "{{ django_settings }}"
-        virtualenv: "{{ project_root }}/venv/"
+        virtualenv: "{{ project_root }}/env/"
       become: yes
       become_user: "{{ user_username }}"
 
@@ -55,7 +55,7 @@
         app_path: "{{ project_root }}/src/{{ project_name }}"
         pythonpath: "{{ python_path }}"
         settings: "{{ django_settings }}"
-        virtualenv: "{{ project_root }}/venv/"
+        virtualenv: "{{ project_root }}/env/"
       become: yes
       become_user: "{{ user_username }}"
 

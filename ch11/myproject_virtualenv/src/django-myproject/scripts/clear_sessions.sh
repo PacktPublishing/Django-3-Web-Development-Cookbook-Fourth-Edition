@@ -14,7 +14,7 @@ mkdir -p logs
 echo "=== Clearing up Outdated User Sessions ===" > ${LOG_FILE}
 date >> ${LOG_FILE}
 
-source venv/bin/activate
+source env/bin/activate
 cd ${REPOSITORY_PATH}
 python manage.py clearsessions >> "${LOG_FILE}" 2>&1
 function_exit_code=$?
