@@ -38,7 +38,7 @@ This means that you have to create the database user and the database in the Doc
 SSH into the database container and create user and database there with the same values as in the `.build_dev.sh` script:
 
 ```bash
-$ docker exec -it django_docker_db_1 bash
+$ docker exec -it myproject_docker_db_1 bash
 /# su - postgres
 /$ createuser --createdb --password myproject
 /$ createdb --username myproject myproject
@@ -63,11 +63,11 @@ This means that you have to run migrations to create database schema.
 SSH into the gunicorn container and run the necessary Django management commands:
 
 ```bash
-$ docker exec -it django_docker_gunicorn_1 bash
-$ source venv/bin/activate
-(venv)$ python manage.py migrate
-(venv)$ python manage.py collectstatic
-(venv)$ python manage.py createsuperuser
+$ docker exec -it myproject_docker_gunicorn_1 bash
+$ source env/bin/activate
+(env)$ python manage.py migrate
+(env)$ python manage.py collectstatic
+(env)$ python manage.py createsuperuser
 ```
 
 Answer all the questions asked by the management commands.
@@ -88,9 +88,9 @@ $ ./build_dev.sh
 ### SSH to the Docker containers
 
 ```bash
-$ docker exec -it django_docker_gunicorn_1 bash
-$ docker exec -it django_docker_nginx_1 bash
-$ docker exec -it django_docker_db_1 bash
+$ docker exec -it myproject_docker_gunicorn_1 bash
+$ docker exec -it myproject_docker_nginx_1 bash
+$ docker exec -it myproject_docker_db_1 bash
 ```
 
 ### View logs
@@ -104,8 +104,8 @@ $ docker-compose logs db
 ### Copy files and directories to and from Docker container
 
 ```bash
-$ docker cp ~/avatar.png django_docker_gunicorn_1:/home/myproject/media/
-$ docker cp django_docker_gunicorn_1:/home/myproject/media ~/Desktop/
+$ docker cp ~/avatar.png myproject_docker_gunicorn_1:/home/myproject/media/
+$ docker cp myproject_docker_gunicorn_1:/home/myproject/media ~/Desktop/
 ```
 
 ## 7. Create analogous scripts for staging, production, and test environments
