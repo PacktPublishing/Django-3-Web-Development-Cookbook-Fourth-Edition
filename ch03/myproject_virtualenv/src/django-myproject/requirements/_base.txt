@@ -4,7 +4,7 @@ cffi==1.12.3
 coverage==4.5.3
 cssselect2==0.2.2
 defusedxml==0.6.0
-Django~=3.0.0
+Django~=3.0.3
 django-appconf==1.0.3
 django-crispy-forms==1.7.2
 django-elasticsearch-dsl==6.4.1
