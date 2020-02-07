@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <a href="{% url "locations:location_list" %}">{% trans "List of locations" %}</a>
+    <form action="{{ request.path }}" method="POST">
+        {% csrf_token %}
+        <h1>{% trans "Delete Location?" %}</h1>
+        <p>
+            {% blocktrans trimmed with name=location.name url_path=location.get_url_path %}
+                Do you really want to delete location "<a href="{{ url_path }}">{{ name }}</a>"?
+            {% endblocktrans %}
+        </p>
+        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+    </form>
+{% endblock %}

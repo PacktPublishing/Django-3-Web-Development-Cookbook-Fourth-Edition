@@ -1,0 +1,37 @@
+.rating {
+  color: #c90;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.rating span {
+  color: #fc0;
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  white-space: nowrap;
+}
+
+.rating span:before,
+.rating span:after {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.rating:before {
+  content: "☆☆☆☆☆";
+}
+
+.rating span:after {
+  content: "★★★★★";
+}

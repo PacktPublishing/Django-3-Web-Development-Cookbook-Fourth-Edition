@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n static likes_tags %}
+
+
+{% block content %}
+    <a href="{% url "locations:location_list" %}">{% trans "Interesting Locations" %}</a>
+    <div class="float-right">
+        {% if request.user.is_authenticated %}
+            {% like_widget for location %}
+        {% endif %}
+    </div>
+    <h1 class="map-title">{{ location.name }}</h1>
+    {% if location.picture %}
+        <picture class="img-fluid">
+            <source
+                media="(max-width: 480px)"
+                srcset="{{ location.picture_mobile.url }}" />
+            <source
+                media="(max-width: 768px)"
+                srcset="{{ location.picture_tablet.url }}" />
+            <img
+                src="{{ location.picture_desktop.url }}"
+                alt="{{ location.name }}"
+                class="img-fluid"
+            />
+        </picture>
+    {% endif %}
+    <div class="my-3">
+        {{ location.description|linebreaks|urlize }}
+    </div>
+{% endblock %}

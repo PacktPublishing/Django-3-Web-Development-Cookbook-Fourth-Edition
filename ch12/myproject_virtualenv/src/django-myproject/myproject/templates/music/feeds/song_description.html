@@ -1,0 +1,9 @@
+{% load i18n %}
+{% with song=obj %}
+    {% if song.image %}
+        <img src="{{ song.image.url }}" alt="{{ song }}" />
+    {% endif %}
+    {% if song.url %}
+        <a href="{{ song.url }}" target="_blank" rel="noreferrer noopener">{% trans "Check this song" %}</a>
+    {% endif %}
+{% endwith %}
