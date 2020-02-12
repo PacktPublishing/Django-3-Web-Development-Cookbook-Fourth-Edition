@@ -22,9 +22,6 @@ DATABASE=$(echo "from django.conf import settings; print(settings.DATABASES['def
 USER=$(echo "from django.conf import settings; print(settings.DATABASES['default']['USER'])" | python manage.py shell -i python)
 PASSWORD=$(echo "from django.conf import settings; print(settings.DATABASES['default']['PASSWORD'])" | python manage.py shell -i python)
 
-echo "=== Creating DB Backup ===" > ${LOG_FILE}
-date >> ${LOG_FILE}
-
 EXCLUDED_TABLES=(
 django_session
 )
@@ -33,6 +30,9 @@ IGNORED_TABLES_STRING=''
 for TABLE in "${EXCLUDED_TABLES[@]}"; do
     IGNORED_TABLES_STRING+=" --ignore-table=${DATABASE}.${TABLE}"
 done
+
+echo "=== Creating DB Backup ===" > ${LOG_FILE}
+date >> ${LOG_FILE}
 
 echo "- Dump structure" >> ${LOG_FILE}
 mysqldump -u "${USER}" -p"${PASSWORD}" --single-transaction --no-data "${DATABASE}" > "${DAILY_BACKUP_PATH}" 2>> ${LOG_FILE}
