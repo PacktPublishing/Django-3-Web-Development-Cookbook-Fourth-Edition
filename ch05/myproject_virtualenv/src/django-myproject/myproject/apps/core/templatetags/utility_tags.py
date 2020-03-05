@@ -253,15 +253,15 @@ DAYS_PER_WEEK = 7
 
 
 @register.filter(is_safe=True)
-def date_since(value):
+def date_since(specific_date):
     """
-    Returns a human-friendly difference between today and value
+    Returns a human-friendly difference between today and past_date
     (adapted from https://www.djangosnippets.org/snippets/116/)
     """
     today = timezone.now().date()
-    if isinstance(value, datetime):
-        value = value.date()
-    diff = today - value
+    if isinstance(specific_date, datetime):
+        specific_date = specific_date.date()
+    diff = today - specific_date
     diff_years = int(diff.days / DAYS_PER_YEAR)
     diff_months = int(diff.days / DAYS_PER_MONTH)
     diff_weeks = int(diff.days / DAYS_PER_WEEK)
@@ -283,7 +283,7 @@ def date_since(value):
         return _("today")
     else:
         # Date is in the future; return formatted date.
-        return f"{value:%B %d, %Y}"
+        return f"{specific_date:%B %d, %Y}"
 
 
 MEDIA_CLOSED_TAGS = "|".join([
@@ -308,7 +308,7 @@ def first_media(content):
 
 
 @register.filter
-def humanize_url(url, letter_count):
+def humanize_url(url, letter_count=40):
     """
     Returns a shortened human-readable URL
     """
