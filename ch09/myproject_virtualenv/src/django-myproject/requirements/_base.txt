@@ -5,7 +5,7 @@ coverage==4.5.3
 defusedxml==0.6.0
 Django~=3.0.3
 django-tastypie==0.14.2
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 et-xmlfile==1.0.1
 idna==2.8
 jdcal==1.4.1
