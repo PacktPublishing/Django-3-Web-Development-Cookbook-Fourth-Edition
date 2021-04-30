@@ -29,5 +29,5 @@ sqlparse==0.3.0
 traitlets==4.3.3
 transliterate==1.10.2
 typing==3.7.4.1
-urllib3==1.25.7
+urllib3==1.25.8
 wcwidth==0.1.7
