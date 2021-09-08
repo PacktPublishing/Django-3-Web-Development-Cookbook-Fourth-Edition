@@ -9,7 +9,7 @@ django-mptt==0.10.0
 django-mptt-admin==0.7.2
 django-treebeard==4.3
 pilkit==2.0
-Pillow==8.1.1
+Pillow==8.3.2
 psycopg2-binary==2.8.3
 pytz==2019.2
 six==1.13.0
