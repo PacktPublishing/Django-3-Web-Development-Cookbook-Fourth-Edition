@@ -15,7 +15,7 @@ future==0.18.2
 idna==2.8
 oauthlib==3.1.0
 pilkit==2.0
-Pillow==8.1.1
+Pillow==9.0.0
 psycopg2-binary==2.8.3
 pyasn1==0.4.8
 PyJWT==1.7.1
