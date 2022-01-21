@@ -12,7 +12,7 @@ Django~=3.0.3
 django-debug-toolbar==2.1
 greenlet==0.4.15
 idna==2.8
-ipython==7.10.2
+ipython==7.16.3
 ipython-genutils==0.2.0
 jedi==0.15.2
 parso==0.5.2
