@@ -18,7 +18,7 @@ pilkit==2.0
 Pillow==9.0.0
 psycopg2-binary==2.8.3
 pyasn1==0.4.8
-PyJWT==1.7.1
+PyJWT==2.4.0
 python-dotenv==0.10.3
 python-jose==3.0.1
 python-memcached==1.59
