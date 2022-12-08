@@ -3,7 +3,7 @@ asgiref==3.2.3
 backcall==0.1.0
 blessings==1.7
 bpython==0.18
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 coverage==4.5.3
 curtsies==0.3.0
